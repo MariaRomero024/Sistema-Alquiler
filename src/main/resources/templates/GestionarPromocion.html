@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gestión de Promociones</title>
+    <link rel="stylesheet" href="dashboard.css" />
+    <script
+      src="https://kit.fontawesome.com/your-code.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <aside class="sidebar">
+        <div class="logo"><h2>AlquilerExpress</h2></div>
+        <nav>
+          <ul>
+            <li><a href="#">Inicio</a></li>
+            <li><a href="#" class="active">Gestión de Promociones</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+      <main class="main-content">
+        <header class="top-bar">
+          <div class="title-section">
+            <h1>Gestión de Promociones</h1>
+            <p>Administra la información de los visitantes</p>
+          </div>
+
+          <div class="toolbar">
+            <button class="btn btn-secondary">Exportar Excel</button>
+            <button class="btn btn-primary">+ Nuevo Promocion</button>
+          </div>
+          <div class="toolbar">
+            <button class="btn btn-secondary">Descargar Reporte</button>
+            <button class="btn btn-success" id="btnNuevoPromocion">
+              + Agregar Nuevo Promocion
+            </button>
+          </div>
+        </header>
+
+        <section class="filter-section">
+          <form class="filter-form">
+            <div class="filter-group">
+              <label for="dni"> Buscar </label>
+              <input type="text" id="dni" placeholder="Ej: bla bla bla bla" />
+            </div>
+            <button type="submit" class="btn-search">Buscar</button>
+          </form>
+        </section>
+
+        <section class="table-section">
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Id</th>
+                  <th>Descripcion</th>
+                  <th>Tipo</th>
+                  <th>Valor_descuento</th>
+                  <th>Fecha Inicio</th>
+                  <th>Fecha Final</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>P001</strong></td>
+                  <td>blablabla</td>
+                  <td>anuel</td>
+                  <td>3%</td>
+                  <td>15/12/2023</td>
+                  <td><span class="status active">23/12/2024</span></td>
+                  <td class="actions">
+                    <button title="Editar">✏️</button>
+                    <button title="Eliminar" class="delete">🗑️</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <nav class="pagination">
+            <button disabled>Anterior</button>
+            <span class="page-numbers">Página 1 de 12</span>
+            <button>Siguiente</button>
+          </nav>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
