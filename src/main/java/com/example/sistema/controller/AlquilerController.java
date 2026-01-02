@@ -34,7 +34,7 @@ public class AlquilerController {
     public String mostrarFormulario(Model model) {
         model.addAttribute("alquileres", alquilerService.obtenerTodos());
         model.addAttribute("turistas", turistaService.obtenerTodos()); // Para llenar el select de turistas
-        model.addAttribute("promociones", promocionService.obtenerTodas()); // Para el select de promociones
+        model.addAttribute("promociones", promocionService.obtenerTodos()); // Para el select de promociones
         return "GestionarAlquiler"; // Nombre del archivo HTML
     }
 

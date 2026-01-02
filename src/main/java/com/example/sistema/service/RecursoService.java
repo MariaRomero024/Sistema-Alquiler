@@ -16,7 +16,7 @@ public class RecursoService {
         this.recursoRepository = recursoRepository;
     }
 
-    // Guardar un recurso en la base de datos
+    // Guardar un Recurso en la base de datos
     public Recurso guardarRecurso(Recurso recurso) {
         if(recurso.getIdRecurso() == null || recurso.getIdRecurso().trim().isEmpty()) {
             long nextNum = recursoRepository.count() + 1;
@@ -27,7 +27,7 @@ public class RecursoService {
     return recursoRepository.save(recurso);
 }
 
-    // Obtener todos los recursos
+    // Obtener todos los Recursos
     public List<Recurso> obtenerTodos() {
         return recursoRepository.findAll();
     }

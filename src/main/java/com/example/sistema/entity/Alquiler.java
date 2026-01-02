@@ -1,12 +1,13 @@
 package com.example.sistema.entity;
 
+import java.util.Date;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import java.util.Date;
 
 
 @Entity
@@ -20,15 +21,15 @@ public class Alquiler{
 
     @ManyToOne
     @JoinColumn(name = "idUsuario")
-    private Usuario usuario;
+    private Usuario idUsuario;
 
     @ManyToOne
     @JoinColumn(name = "idTurista")
-    private Turista turista;
+    private Turista idTurista;
 
     @ManyToOne
     @JoinColumn(name = "idPromocion")
-    private Promocion promocion;
+    private Promocion idPromocion;
     
     @Column(name = "fecha")
     private Date fecha;
@@ -47,16 +48,16 @@ public class Alquiler{
         return idAlquiler;
     }
 
-    public Usuario getUsuario() {
-        return usuario;
+    public Usuario getIdIdUsuario() {
+        return idUsuario;
     }
 
-    public Turista getTurista() {
-        return turista;
+    public Turista getIdTurista() {
+        return idTurista;
     }
 
-    public Promocion getPromocion() {
-        return promocion;
+    public Promocion getIdPromocion() {
+        return idPromocion;
     }
     
     public Date getFecha() {
@@ -79,16 +80,16 @@ public class Alquiler{
         this.idAlquiler = id;
     }
 
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
+    public void setIdUsuario(Usuario IdUsuario) {
+        this.idUsuario = IdUsuario;
     }
 
-    public void setTurista(Turista turista) {
-        this.turista = turista;
+    public void setIdTurista(Turista IdTurista) {
+        this.idTurista = IdTurista;
     }
 
-    public void setPromocion(Promocion promocion) {
-        this.promocion = promocion;
+    public void setIdPromocion(Promocion idPromocion) {
+        this.idPromocion = idPromocion;
     }
 
     public void setFecha(Date fecha) {

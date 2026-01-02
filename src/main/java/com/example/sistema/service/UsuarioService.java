@@ -16,7 +16,7 @@ public class UsuarioService {
         this.usuarioRepository = usuarioRepository;
     }
 
-    // Guardar un Usuario en la base de datos
+    // Guardar un usuario en la base de datos
     public Usuario guardarUsuario(Usuario usuario) {
         if(usuario.getIdUsuario() == null || usuario.getIdUsuario().trim().isEmpty()) {
             long nextNum = usuarioRepository.count() + 1;
@@ -27,7 +27,7 @@ public class UsuarioService {
     return usuarioRepository.save(usuario);
 }
 
-    // Obtener todos los Usuarios
+    // Obtener todos los usuarios
     public List<Usuario> obtenerTodos() {
         return usuarioRepository.findAll();
     }
