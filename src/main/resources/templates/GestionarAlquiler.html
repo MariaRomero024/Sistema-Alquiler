@@ -1,95 +1,153 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Gestión de Turistas</title>
-    <link rel="stylesheet" href="dashboard.css" />
-    <script
-      src="https://kit.fontawesome.com/your-code.js"
-      crossorigin="anonymous"
-    ></script>
+    <title>Sistema de Registro - Alquileres</title>
   </head>
   <body>
-    <div class="dashboard-container">
-      <aside class="sidebar">
-        <div class="logo"><h2>AlquilerExpress</h2></div>
-        <nav>
-          <ul>
-            <li><a href="#">Inicio</a></li>
-            <li><a href="#" class="active">Gestión de Turistas</a></li>
-          </ul>
-        </nav>
-      </aside>
+    <div style="max-width: 1100px; margin: 0 auto">
+      <div class="header-proyecto">
+        <h1>Gestión de Alquileres</h1>
+      </div>
 
-      <main class="main-content">
-        <header class="top-bar">
-          <div class="title-section">
-            <h1>Gestión de Turistas</h1>
-            <p>Administra la información de los visitantes</p>
+      <div class="card">
+        <div
+          class="card-header"
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+          "
+        >
+          <h2>Listado de Alquileres Registrados</h2>
+          <button class="btn btn-guardar" onclick="miModal.showModal()">
+            + Nuevo Alquiler
+          </button>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Fecha</th>
+              <th>Turista</th>
+              <th>Monto Bruto</th>
+              <th>Monto Total</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="alquiler : ${alquileres}">
+              <td th:text="${alquiler.idAlquiler}"></td>
+              <td th:text="${#dates.format(alquiler.fecha, 'dd/MM/yyyy')}"></td>
+              <td th:text="${alquiler.idTurista}"></td>
+              <td th:text="${alquiler.montoBruto}"></td>
+              <td th:text="${alquiler.montoTotal}"></td>
+              <td>
+                <span
+                  th:text="${alquiler.estado}"
+                  th:classappend="${alquiler.estado == 'Pagado' ? 'status-ok' : 'status-pending'}"
+                >
+                </span>
+              </td>
+              <td>
+                <button class="btn-edit">Ver</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <dialog id="miModal">
+        <div
+          class="card-header"
+          style="justify-content: space-between; display: flex"
+        >
+          <h2>Registro de Nuevo Alquiler</h2>
+          <button class="btn" onclick="miModal.close()">×</button>
+        </div>
+        <form th:action="@{/alquiler/guardar}" method="post">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>ID Usuario (Vendedor):</label>
+              <input
+                type="text"
+                name="idUsuario"
+                placeholder="ID del usuario actual"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label>Turista:</label>
+              <select name="idTurista" required class="form-input">
+                <option value="">Seleccione un turista...</option>
+                <option
+                  th:each="t : ${turistas}"
+                  th:value="${t.idTurista}"
+                  th:text="${t.nombre + ' ' + t.apellido}"
+                ></option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Promoción:</label>
+              <select name="idPromocion" class="form-input">
+                <option value="">Ninguna</option>
+                <option
+                  th:each="p : ${promociones}"
+                  th:value="${p.idPromocion}"
+                  th:text="${p.nombre}"
+                ></option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Fecha de Alquiler:</label>
+              <input type="date" name="fecha" required />
+            </div>
+            <div class="form-group">
+              <label>Monto Bruto ($):</label>
+              <input
+                type="number"
+                step="0.01"
+                name="montoBruto"
+                placeholder="0.00"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label>Monto Total ($):</label>
+              <input
+                type="number"
+                step="0.01"
+                name="montoTotal"
+                placeholder="0.00"
+                required
+              />
+            </div>
+            <div class="form-group full-width">
+              <label>Estado del Alquiler:</label>
+              <select name="estado" class="form-input">
+                <option value="Pendiente">Pendiente</option>
+                <option value="Pagado">Pagado</option>
+                <option value="Cancelado">Cancelado</option>
+              </select>
+            </div>
           </div>
 
-          <div class="toolbar">
-            <button class="btn btn-secondary">Exportar Excel</button>
-            <button class="btn btn-primary">+ Nuevo Turista</button>
-          </div>
-          <div class="toolbar">
-            <button class="btn btn-secondary">Descargar Reporte</button>
-            <button class="btn btn-success" id="btnNuevoTurista">
-              + Agregar Nuevo Turista
+          <div class="btn-container">
+            <button type="reset" class="btn" style="background: #eee">
+              Limpiar
+            </button>
+            <button type="submit" class="btn btn-guardar">
+              Registrar Alquiler
             </button>
           </div>
-        </header>
+        </form>
+      </dialog>
 
-        <section class="filter-section">
-          <form class="filter-form">
-            <div class="filter-group">
-              <label for="dni"> Buscar </label>
-              <input type="text" id="dni" placeholder="Ej: bla bla bla bla" />
-            </div>
-            <button type="submit" class="btn-search">Buscar</button>
-          </form>
-        </section>
-
-        <section class="table-section">
-          <div class="table-container">
-            <table>
-              <thead>
-                <tr>
-                  <th>Nombre</th>
-                  <th>DNI/Doc</th>
-                  <th>Teléfono</th>
-                  <th>País</th>
-                  <th>Última Visita</th>
-                  <th>Estado</th>
-                  <th>Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><strong>Carlos Ruiz</strong></td>
-                  <td>45882233L</td>
-                  <td>+34 611 222 333</td>
-                  <td>España</td>
-                  <td>15/12/2023</td>
-                  <td><span class="status active">Hospedado</span></td>
-                  <td class="actions">
-                    <button title="Editar">✏️</button>
-                    <button title="Ver historial">👁️</button>
-                    <button title="Eliminar" class="delete">🗑️</button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <nav class="pagination">
-            <button disabled>Anterior</button>
-            <span class="page-numbers">Página 1 de 12</span>
-            <button>Siguiente</button>
-          </nav>
-        </section>
-      </main>
+      <footer>
+        &copy; 2024 - Sistema de Gestión de Alquileres | Facultad de Ingeniería
+      </footer>
     </div>
   </body>
 </html>

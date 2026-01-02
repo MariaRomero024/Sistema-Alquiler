@@ -1,0 +1,105 @@
+:root {
+  --azul-univer: #2c3e50;
+  --azul-acento: #3498db;
+  --gris-fondo: #f4f7f6;
+  --blanco: #ffffff;
+  --borde: #dcdde1;
+  --verde-exito: #27ae60;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, sans-serif;
+  background-color: var(--gris-fondo);
+  margin: 0;
+  padding: 20px;
+  color: #333;
+}
+
+/* ... (mantener los estilos anteriores de .header-proyecto, .card, h1, h2) ... */
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.full-width {
+  grid-column: span 2;
+}
+
+label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  font-size: 0.9em;
+}
+
+/* Estilos para inputs y selects */
+input,
+select {
+  padding: 10px;
+  border: 1px solid var(--borde);
+  border-radius: 4px;
+  font-size: 1rem;
+  background: white;
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  border-color: var(--azul-acento);
+  box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+}
+
+/* Estados */
+.status-ok {
+  color: var(--verde-exito);
+  font-weight: bold;
+  background: #eafaf1;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.status-pending {
+  color: #e67e22;
+  font-weight: bold;
+  background: #fef5e7;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+/* Estilos de Tabla */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+th,
+td {
+  padding: 15px;
+  text-align: left;
+  border-bottom: 1px solid var(--borde);
+}
+
+th {
+  background-color: var(--azul-univer);
+  color: white;
+}
+
+/* Modal mejorado */
+dialog {
+  border: none;
+  border-radius: 12px;
+  padding: 30px;
+  width: 700px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+dialog::backdrop {
+  background: rgba(0, 0, 0, 0.5);
+}
