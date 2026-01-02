@@ -17,13 +17,13 @@ public class DetalleAlquilerService {
     public List<DetalleAlquiler> obtenerPorAlquiler(String idAlquiler) {
         return detalleAlquilerRepository.findAll()
                 .stream()
-                .filter(d -> d.getIdAlquiler().equals(idAlquiler))
+                .filter(d -> d.getAlquiler().equals(idAlquiler))
                 .toList();
     }
 
     public DetalleAlquiler guardar(DetalleAlquiler detalle) {
           if(detalle.getIdDetalleAlquiler() == null || detalle.getIdDetalleAlquiler().trim().isEmpty()) {
-            long nextNum = DetalleAlquilerRepository.count() + 1;
+            long nextNum = detalleAlquilerRepository.count() + 1;
             String numId = "DA" + String.format("%03d", nextNum);
             detalle.setIdDetalleAlquiler(numId);
             System.out.println("ID GENERADO EXITOSAMENTE: " + detalle.getIdDetalleAlquiler());

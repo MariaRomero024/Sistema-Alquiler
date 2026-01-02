@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.example.sistema.entity.Pago;
-import com.example.sistema.repository.PagoRepository;
+import com.example.sistema.entity.Promocion;
+import com.example.sistema.repository.PromocionRepository;
 
 @Service
 public class PromocionService {

@@ -22,7 +22,7 @@ public class Recurso {
         return idRecurso;
     }
 
-    public String getnombre() {
+    public String getNombre() {
         return nombre;
     }
 

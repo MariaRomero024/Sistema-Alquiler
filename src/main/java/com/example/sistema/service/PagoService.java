@@ -20,7 +20,7 @@ public class PagoService {
     public Pago guardarPago(Pago pago) {
         if(pago.getIdPago() == null || pago.getIdPago().trim().isEmpty()) {
             long nextNum = pagoRepository.count() + 1;
-            String numId = "T" + String.format("%03d", nextNum);
+            String numId = "Pa" + String.format("%03d", nextNum);
             pago.setIdPago(numId);
             System.out.println("ID GENERADO EXITOSAMENTE: " + pago.getIdPago());
         }
