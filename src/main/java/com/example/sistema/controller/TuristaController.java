@@ -19,10 +19,10 @@ public class TuristaController {
     }
 
     // Mostrar formulario para agregar turistas
-    @GetMapping("/registrar-turista")
+    @GetMapping("/gestionar-turista")
     public String mostrarFormulario(Model model) {
         model.addAttribute("turistas", turistaService.obtenerTodos()); // Mostrar lista de turistas
-        return "RegistrarTurista"; // Este es el nombre del archivo HTML
+        return "GestionarTurista"; // Este es el nombre del archivo HTML
     }
 
     // Procesar el formulario de turista
@@ -35,6 +35,6 @@ public class TuristaController {
         turista.setTelefono(telefono);
         turista.setCorreo(correo);
         turistaService.guardarTurista(turista);  // Guardamos el turista
-        return "redirect:/";  // Redirigimos al formulario con la lista actualizada
+        return "redirect:/gestionar-turista";  // Redirigimos al formulario con la lista actualizada
     }
 }

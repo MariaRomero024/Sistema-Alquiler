@@ -1,90 +1,122 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Gestión de Pago</title>
-    <link rel="stylesheet" href="dashboard.css" />
-    <script
-      src="https://kit.fontawesome.com/your-code.js"
-      crossorigin="anonymous"
-    ></script>
+    <title>Sistema de Registro - Turistas</title>
   </head>
   <body>
-    <div class="dashboard-container">
-      <aside class="sidebar">
-        <div class="logo"><h2>AlquilerExpress</h2></div>
-        <nav>
-          <ul>
-            <li><a href="#">Inicio</a></li>
-            <li><a href="#" class="active">Gestión de Pago</a></li>
-          </ul>
-        </nav>
-      </aside>
+    <div style="max-width: 900px; margin: 0 auto">
+      <div class="header-proyecto">
+        <h1>Gestión de Turistas</h1>
+      </div>
 
-      <main class="main-content">
-        <header class="top-bar">
-          <div class="title-section">
-            <h1>Gestión de Pago</h1>
-            <p>Administra la información de los visitantes y sus pagos</p>
-          </div>
-
-          <div class="toolbar">
-            <button class="btn btn-secondary">Exportar Excel</button>
-          </div>
-          <div class="toolbar">
-            <button class="btn btn-secondary">Descargar Reporte</button>
-          </div>
-        </header>
-
-        <section class="filter-section">
-          <form class="filter-form">
-            <div class="filter-group">
-              <label for="dni"> Buscar </label>
-              <input type="text" id="dni" placeholder="Ej: bla bla bla bla" />
+      <div class="card">
+        <div
+          class="card-header"
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+          "
+        >
+          <h2>Listado de Turistas Registrados</h2>
+          <button class="btn btn-guardar" onclick="miModal.showModal()">
+            Nuevo Turista
+          </button>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Apellido</th>
+              <th>DNI/Pasaporte</th>
+              <th>Teléfono</th>
+              <th>Email</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="turista : ${turistas}">
+              <td th:text="${turista.idTurista}"></td>
+              <td th:text="${turista.nombre}"></td>
+              <td th:text="${turista.apellido}"></td>
+              <td th:text="${turista.dni_pasaporte}"></td>
+              <td th:text="${turista.telefono}"></td>
+              <td th:text="${turista.correo}"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <dialog
+        id="miModal"
+        style="border: none; border-radius: 8px; padding: 20px; width: 800px"
+      >
+        <div
+          class="card-header"
+          style="justify-content: space-between; display: flex"
+        >
+          <h2>Registro de Nuevo Ingreso</h2>
+          <button class="btn" onclick="miModal.close()">Cerrar</button>
+        </div>
+        <form th:action="@{/guardar}" method="post">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Nombre:</label>
+              <input
+                type="text"
+                name="nombre"
+                placeholder="Ej. Juan"
+                required
+              />
             </div>
-            <button type="submit" class="btn-search">Buscar</button>
-          </form>
-        </section>
-
-        <section class="table-section">
-          <div class="table-container">
-            <table>
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>nombre</th>
-                  <th>apellido</th>
-                  <th>dni_pasaporte</th>
-                  <th>telefono</th>
-                  <th>correo</th>
-                  <th>Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><strong>T001</strong></td>
-                  <td>pepi</td>
-                  <td>suarez</td>
-                  <td>46326421</td>
-                  <td>942134563</td>
-                  <td>mdvnjv@v.vsf</td>
-                  <td class="actions">
-                    <button title="Editar">✏️</button>
-                    <button title="Eliminar" class="delete">🗑️</button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            <div class="form-group">
+              <label>Apellido:</label>
+              <input
+                type="text"
+                name="apellido"
+                placeholder="Ej. Pérez"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label>DNI / Pasaporte:</label>
+              <input
+                type="text"
+                name="dni_pasaporte"
+                placeholder="Número de documento"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label>Teléfono:</label>
+              <input type="tel" name="telefono" placeholder="+54 9 11..." />
+            </div>
+            <div class="form-group">
+              <label>Correo Electrónico:</label>
+              <input
+                type="email"
+                name="correo"
+                placeholder="ejemplo@correo.com"
+                required
+              />
+            </div>
           </div>
 
-          <nav class="pagination">
-            <button disabled>Anterior</button>
-            <span class="page-numbers">Página 1 de 12</span>
-            <button>Siguiente</button>
-          </nav>
-        </section>
-      </main>
+          <div class="btn-container">
+            <button type="reset" class="btn" style="background: #eee">
+              Limpiar
+            </button>
+            <button type="submit" class="btn btn-guardar">
+              Guardar Registro
+            </button>
+          </div>
+        </form>
+      </dialog>
+
+      <footer>
+        &copy; 2024 - Sistema de Registro de Turistas | Facultad de Ingeniería
+      </footer>
     </div>
   </body>
 </html>

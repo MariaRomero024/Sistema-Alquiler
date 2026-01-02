@@ -1,0 +1,214 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Segoe UI", sans-serif;
+  background-color: #f6f6f8;
+  color: #111318;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* BARRA SUPERIOR */
+.navbar-superior {
+  background-color: white;
+  padding: 10px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #e5e7eb;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbar-izquierda {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: #111318;
+}
+
+.logo-icon {
+  background-color: #2b6cee;
+  color: white;
+  width: 35px;
+  height: 35px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Buscador central */
+.buscador-central {
+  background-color: #f0f2f4;
+  border-radius: 10px;
+  padding: 8px 15px;
+  display: flex;
+  align-items: center;
+  width: 350px;
+}
+
+.buscador-central input {
+  background: transparent;
+  border: none;
+  outline: none;
+  margin-left: 10px;
+  width: 100%;
+  font-size: 0.9rem;
+}
+
+/* Menú de navegación */
+.menu-navegacion {
+  display: flex;
+  gap: 25px;
+  list-style: none;
+}
+
+.menu-navegacion li a {
+  text-decoration: none;
+  color: #616f89;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: color 0.3s;
+}
+
+.menu-navegacion li a.activo,
+.menu-navegacion li a:hover {
+  color: #2b6cee;
+}
+
+.navbar-derecha {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  color: #111318;
+}
+
+.avatar-usuario {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background-color: #ddd;
+  overflow: hidden;
+}
+/* Estilo para los enlaces de iconos en la barra derecha */
+.icon-link {
+  color: #111318;
+  text-decoration: none;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  transition: color 0.3s;
+}
+
+.icon-link:hover {
+  color: #2b6cee; /* Cambia a azul al pasar el mouse */
+}
+
+.navbar-derecha i {
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.navbar-derecha i:hover {
+  color: #2b6cee;
+}
+/* --- CONTENIDO PRINCIPAL --- */
+.contenedor-principal {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 20px;
+  width: 100%;
+}
+
+.saludo-header {
+  margin-bottom: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.fecha-badge {
+  background: white;
+  padding: 8px 15px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* --- DASHBOARD GRID --- */
+.grid-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.card-stat {
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+  border: 1px solid #e5e7eb;
+}
+
+.card-stat h3 {
+  font-size: 0.8rem;
+  color: #616f89;
+  margin-bottom: 5px;
+}
+
+.card-stat p {
+  font-size: 1.8rem;
+  font-weight: 800;
+}
+
+.dashboard-body {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 30px;
+}
+
+.panel-blanco {
+  background: white;
+  border-radius: 15px;
+  padding: 25px;
+  border: 1px solid #e5e7eb;
+}
+
+/* --- RESPONSIVIDAD (MÓVILES) --- */
+@media (max-width: 992px) {
+  .buscador-central,
+  .menu-navegacion {
+    display: none; /* Se ocultan en tabletas/móviles para simplificar */
+  }
+  .grid-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .dashboard-body {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .grid-stats {
+    grid-template-columns: 1fr;
+  }
+  .navbar-superior {
+    padding: 10px 20px;
+  }
+}
