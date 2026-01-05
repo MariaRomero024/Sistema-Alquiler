@@ -31,4 +31,7 @@ public class TuristaService {
     public List<Turista> obtenerTodos() {
         return turistaRepository.findAll();
     }
+    public Turista buscarPorDniPasaporte(String dniPasaporte) {
+    return turistaRepository.findByDniPasaporte(dniPasaporte).orElse(null);
+}
 }

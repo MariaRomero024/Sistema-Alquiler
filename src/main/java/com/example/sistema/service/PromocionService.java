@@ -31,4 +31,8 @@ public class PromocionService {
     public List<Promocion> obtenerTodos() {
         return promocionRepository.findAll();
     }
+    public Promocion buscarPorId(String id) {
+    return promocionRepository.findById(id).orElse(null);
+}
+
 }

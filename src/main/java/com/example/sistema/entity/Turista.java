@@ -14,7 +14,8 @@ public class Turista {
     private String nombre;
     private String apellido;
     private Integer telefono;
-    private String dni_pasaporte;
+    @Column(name = "dni_pasaporte")
+    private String dniPasaporte;
     private String correo;
     // Getters y Setters
 
@@ -34,8 +35,8 @@ public class Turista {
         return telefono;
     }
 
-    public String getDni_pasaporte() {
-        return dni_pasaporte;
+    public String getDniPasaporte() {
+        return dniPasaporte;
     }
 
     public String getCorreo() {
@@ -58,8 +59,8 @@ public class Turista {
         this.telefono = telefono;
     }
 
-    public void setDni_pasaporte(String dni_pasaporte) {
-        this.dni_pasaporte = dni_pasaporte;
+    public void setDniPasaporte(String dniPasaporte) {
+        this.dniPasaporte = dniPasaporte;
     }
 
     public void setCorreo(String correo) {

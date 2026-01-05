@@ -3,28 +3,323 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sistema de Registro - Alquileres</title>
+    <title>Sistema de Gestión - Alquileres</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <style>
+      /* --- RESET Y VARIABLES --- */
+      :root {
+        --azul-univer: #2c3e50;
+        --azul-acento: #3498db;
+        --azul-bright: #2b6cee;
+        --gris-fondo: #f4f7f6;
+        --blanco: #ffffff;
+        --borde: #e5e7eb;
+        --verde-exito: #27ae60;
+        --rojo: #e74c3c;
+        --texto-suave: #616f89;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--gris-fondo);
+        color: #333;
+        line-height: 1.6;
+      }
+
+      /* --- NAVBAR SUPERIOR --- */
+      .navbar-superior {
+        background-color: white;
+        padding: 10px 40px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid var(--borde);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+      }
+
+      .navbar-izquierda {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      }
+
+      .logo-container {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 800;
+        font-size: 1.1rem;
+        color: #111318;
+      }
+
+      .logo-icon {
+        background-color: var(--azul-bright);
+        color: white;
+        width: 35px;
+        height: 35px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .menu-navegacion {
+        display: flex;
+        gap: 25px;
+        list-style: none;
+      }
+
+      .menu-navegacion li a {
+        text-decoration: none;
+        color: var(--texto-suave);
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: color 0.3s;
+      }
+
+      .menu-navegacion li a:hover,
+      .menu-navegacion li a.activo {
+        color: var(--azul-bright);
+      }
+
+      .navbar-derecha {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      }
+
+      .avatar-usuario {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        background-color: #ddd;
+        overflow: hidden;
+      }
+
+      /* --- DROPDOWN --- */
+      .dropdown {
+        position: relative;
+      }
+      .dropdown-toggle {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        cursor: pointer;
+      }
+      .dropdown-menu {
+        position: absolute;
+        top: 40px;
+        left: 0;
+        background: white;
+        border: 1px solid var(--borde);
+        border-radius: 10px;
+        list-style: none;
+        padding: 8px 0;
+        min-width: 200px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        display: none;
+      }
+      .dropdown-menu.activo {
+        display: block;
+      }
+      .dropdown-menu li a {
+        display: block;
+        padding: 10px 15px;
+        color: #111318;
+        font-size: 0.9rem;
+        text-decoration: none;
+      }
+      .dropdown-menu li a:hover {
+        background-color: #f0f2f4;
+        color: var(--azul-bright);
+      }
+
+      /* --- CONTENIDO PRINCIPAL --- */
+      .main-container {
+        max-width: 1100px;
+        margin: 30px auto;
+        padding: 0 20px;
+      }
+
+      .header-proyecto {
+        margin-bottom: 25px;
+        border-bottom: 3px solid var(--azul-acento);
+        padding-bottom: 10px;
+      }
+
+      .card {
+        background: var(--blanco);
+        border-radius: 8px;
+        padding: 25px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      }
+
+      /* --- TABLAS --- */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+
+      th {
+        background-color: var(--azul-univer);
+        color: white;
+        padding: 15px;
+        text-align: left;
+      }
+
+      td {
+        padding: 15px;
+        border-bottom: 1px solid #edf2f7;
+      }
+
+      /* --- ESTADOS Y BOTONES --- */
+      .status-ok {
+        color: var(--verde-exito);
+        background: #eafaf1;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.85rem;
+        font-weight: bold;
+      }
+      .status-pending {
+        color: #e67e22;
+        background: #fef5e7;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.85rem;
+        font-weight: bold;
+      }
+
+      .btn {
+        padding: 10px 20px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.3s;
+      }
+
+      .btn-guardar {
+        background-color: var(--verde-exito);
+        color: white;
+      }
+      .btn-guardar:hover {
+        opacity: 0.9;
+        transform: translateY(-1px);
+      }
+
+      .icon-btn {
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        font-size: 1.1rem;
+        margin-right: 10px;
+        transition: transform 0.2s;
+      }
+      .icon-btn:hover {
+        transform: scale(1.2);
+      }
+      .editar {
+        color: #2564eb;
+      }
+      .eliminar {
+        color: #e53935;
+      }
+
+      footer {
+        text-align: center;
+        margin-top: 40px;
+        padding: 20px;
+        color: var(--texto-suave);
+        font-size: 0.9rem;
+      }
+
+      @media (max-width: 768px) {
+        .menu-navegacion {
+          display: none;
+        }
+        .navbar-superior {
+          padding: 10px 20px;
+        }
+      }
+    </style>
   </head>
   <body>
-    <div style="max-width: 1100px; margin: 0 auto">
+    <header class="navbar-superior">
+      <div class="navbar-izquierda">
+        <div class="logo-container">
+          <div class="logo-icon"><i class="fas fa-search-location"></i></div>
+          Alquiler Express
+        </div>
+      </div>
+
+      <nav>
+        <ul class="menu-navegacion">
+          <li><a href="/">Inicio</a></li>
+          <li>
+            <a href="/alquiler/gestionar" class="activo">Alquileres</a>
+          </li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" id="btn-gestionar">
+              Gestionar datos <i class="fas fa-chevron-down"></i>
+            </a>
+            <ul class="dropdown-menu">
+              <li><a href="/turista/gestionar">Turistas</a></li>
+              <li><a href="/usuario/gestionar">Usuarios</a></li>
+              <li><a href="/recurso/gestionar">Recursos</a></li>
+              <li><a href="/pago/gestionar">Pago</a></li>
+              <li><a href="/promocion/gestionar">Promociones</a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="navbar-derecha">
+        <i class="far fa-bell" title="Notificaciones"></i>
+        <i class="fas fa-cog" title="Configuración"></i>
+        <div class="avatar-usuario">
+          <img src="https://via.placeholder.com/35" alt="User" />
+        </div>
+      </div>
+    </header>
+
+    <main class="main-container">
       <div class="header-proyecto">
         <h1>Gestión de Alquileres</h1>
       </div>
 
       <div class="card">
         <div
-          class="card-header"
           style="
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 20px;
           "
         >
-          <h2>Listado de Alquileres Registrados</h2>
-          <button class="btn btn-guardar" onclick="miModal.showModal()">
-            + Nuevo Alquiler
-          </button>
+          <h2 style="font-size: 1.2rem; color: var(--azul-univer)">
+            Listado de Alquileres Registrados
+          </h2>
+          <a class="btn btn-guardar" href="/alquiler/nuevo">
+            <i class="fas fa-plus"></i> Nuevo Alquiler
+          </a>
         </div>
+
         <table>
           <thead>
             <tr>
@@ -39,115 +334,55 @@
           </thead>
           <tbody>
             <tr th:each="alquiler : ${alquileres}">
-              <td th:text="${alquiler.idAlquiler}"></td>
-              <td th:text="${#dates.format(alquiler.fecha, 'dd/MM/yyyy')}"></td>
-              <td th:text="${alquiler.idTurista}"></td>
-              <td th:text="${alquiler.montoBruto}"></td>
-              <td th:text="${alquiler.montoTotal}"></td>
+              <td th:text="${alquiler.idAlquiler}">1</td>
+              <td th:text="${#dates.format(alquiler.fecha, 'dd/MM/yyyy')}">
+                12/05/2024
+              </td>
+              <td th:text="${alquiler.idTurista}">Juan Pérez</td>
+              <td th:text="${alquiler.montoBruto}">$100.00</td>
+              <td th:text="${alquiler.montoTotal}">$118.00</td>
               <td>
                 <span
                   th:text="${alquiler.estado}"
                   th:classappend="${alquiler.estado == 'Pagado' ? 'status-ok' : 'status-pending'}"
                 >
+                  Pagado
                 </span>
               </td>
               <td>
-                <button class="btn-edit">Ver</button>
+                <button class="icon-btn editar">
+                  <i class="fa-solid fa-pen"></i>
+                </button>
+                <button class="icon-btn eliminar">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
               </td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <dialog id="miModal">
-        <div
-          class="card-header"
-          style="justify-content: space-between; display: flex"
-        >
-          <h2>Registro de Nuevo Alquiler</h2>
-          <button class="btn" onclick="miModal.close()">×</button>
-        </div>
-        <form th:action="@{/alquiler/guardar}" method="post">
-          <div class="form-grid">
-            <div class="form-group">
-              <label>ID Usuario (Vendedor):</label>
-              <input
-                type="text"
-                name="idUsuario"
-                placeholder="ID del usuario actual"
-                required
-              />
-            </div>
-            <div class="form-group">
-              <label>Turista:</label>
-              <select name="idTurista" required class="form-input">
-                <option value="">Seleccione un turista...</option>
-                <option
-                  th:each="t : ${turistas}"
-                  th:value="${t.idTurista}"
-                  th:text="${t.nombre + ' ' + t.apellido}"
-                ></option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>Promoción:</label>
-              <select name="idPromocion" class="form-input">
-                <option value="">Ninguna</option>
-                <option
-                  th:each="p : ${promociones}"
-                  th:value="${p.idPromocion}"
-                  th:text="${p.nombre}"
-                ></option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>Fecha de Alquiler:</label>
-              <input type="date" name="fecha" required />
-            </div>
-            <div class="form-group">
-              <label>Monto Bruto ($):</label>
-              <input
-                type="number"
-                step="0.01"
-                name="montoBruto"
-                placeholder="0.00"
-                required
-              />
-            </div>
-            <div class="form-group">
-              <label>Monto Total ($):</label>
-              <input
-                type="number"
-                step="0.01"
-                name="montoTotal"
-                placeholder="0.00"
-                required
-              />
-            </div>
-            <div class="form-group full-width">
-              <label>Estado del Alquiler:</label>
-              <select name="estado" class="form-input">
-                <option value="Pendiente">Pendiente</option>
-                <option value="Pagado">Pagado</option>
-                <option value="Cancelado">Cancelado</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="btn-container">
-            <button type="reset" class="btn" style="background: #eee">
-              Limpiar
-            </button>
-            <button type="submit" class="btn btn-guardar">
-              Registrar Alquiler
-            </button>
-          </div>
-        </form>
-      </dialog>
-
       <footer>
         &copy; 2024 - Sistema de Gestión de Alquileres | Facultad de Ingeniería
       </footer>
-    </div>
+    </main>
+
+    <script>
+      // Lógica del Dropdown
+      const btn = document.getElementById("btn-gestionar");
+      const menu = btn.nextElementSibling;
+
+      btn.addEventListener("click", function (e) {
+        e.preventDefault();
+        menu.classList.toggle("activo");
+      });
+
+      // Cerrar al hacer clic fuera
+      document.addEventListener("click", function (e) {
+        if (!btn.contains(e.target) && !menu.contains(e.target)) {
+          menu.classList.remove("activo");
+        }
+      });
+    </script>
   </body>
 </html>

@@ -1,94 +1,593 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gestión de Promociones</title>
-    <link rel="stylesheet" href="dashboard.css" />
-    <script
-      src="https://kit.fontawesome.com/your-code.js"
-      crossorigin="anonymous"
-    ></script>
+
+    <!-- ICONOS -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
   </head>
+  <style>
+    /*RESET GLOBAL Y VARIABLES */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --azul-univer: #2c3e50;
+      --azul-acento: #3498db;
+      --gris-fondo: #f4f7f6;
+      --blanco: #ffffff;
+      --borde: #dcdde1;
+    }
+
+    /*ESTILOS BASE DEL BODY */
+    body {
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      background-color: var(--gris-fondo);
+      color: #333;
+      margin: 0;
+      padding: 0px;
+    }
+
+    /*NAVBAR SUPERIOR */
+    .navbar-superior {
+      background-color: white;
+      padding: 10px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #e5e7eb;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .navbar-izquierda {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: #111318;
+    }
+
+    .logo-icon {
+      background-color: #2b6cee;
+      color: white;
+      width: 35px;
+      height: 35px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /*MENÚ DE NAVEGACIÓN */
+    .menu-navegacion {
+      display: flex;
+      gap: 25px;
+      list-style: none;
+    }
+
+    .menu-navegacion li a {
+      text-decoration: none;
+      color: #616f89;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: color 0.3s;
+    }
+
+    .menu-navegacion li a.activo,
+    .menu-navegacion li a:hover {
+      color: #2b6cee;
+    }
+
+    /*NAVBAR DERECHA (ICONOS / AVATAR) */
+    .navbar-derecha {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      color: #111318;
+    }
+
+    .navbar-derecha i {
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+
+    .navbar-derecha i:hover {
+      color: #2b6cee;
+    }
+
+    .avatar-usuario {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      background-color: #ddd;
+      overflow: hidden;
+    }
+
+    /*DROPDOWN NAVBAR */
+    .dropdown {
+      position: relative;
+    }
+
+    .dropdown-toggle {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .dropdown-menu {
+      position: absolute;
+      top: 35px;
+      left: 0;
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      list-style: none;
+      padding: 8px 0;
+      min-width: 200px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+      display: none;
+      z-index: 1000;
+    }
+
+    .dropdown-menu li a {
+      display: block;
+      padding: 10px 15px;
+      color: #111318;
+      font-size: 0.9rem;
+      text-decoration: none;
+    }
+
+    .dropdown-menu li a:hover {
+      background-color: #f0f2f4;
+      color: #2b6cee;
+    }
+
+    .dropdown-menu.activo {
+      display: block;
+    }
+
+    /*HEADINGS Y CONTENEDOR PRINCIPAL */
+    h1 {
+      color: var(--azul-univer);
+      margin: 20px 0 15px;
+    }
+
+    h2 {
+      font-size: 1.2rem;
+      border-left: 4px solid var(--azul-acento);
+      padding-left: 10px;
+      color: var(--azul-univer);
+    }
+
+    /*CARD (CONTENEDOR PRINCIPAL) */
+    .card {
+      background: var(--blanco);
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      margin-bottom: 30px;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      gap: 16px;
+    }
+
+    /*BUSCADOR Y ACCIONES DEL HEADER */
+    .acciones-header {
+      display: flex;
+      align-items: flex-end;
+      gap: 12px;
+    }
+
+    .filter-form {
+      display: flex;
+      align-items: flex-end;
+      gap: 15px;
+    }
+
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .filter-group label {
+      font-weight: 600;
+      font-size: 0.85rem;
+      margin-bottom: 5px;
+    }
+
+    .filter-group input {
+      padding: 10px;
+      border: 1px solid var(--borde);
+      border-radius: 4px;
+      font-size: 0.95rem;
+    }
+
+    /*BOTONES DEL SISTEMA */
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: background-color 0.3s, transform 0.2s;
+      white-space: nowrap;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-guardar {
+      background-color: var(--azul-acento);
+      color: white;
+    }
+
+    .btn-guardar:hover {
+      background-color: #2b7fc4;
+    }
+
+    td .btn {
+      padding: 6px 12px;
+      font-size: 0.8rem;
+    }
+
+    /*TABLAS */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--blanco);
+    }
+
+    th,
+    td {
+      padding: 12px;
+      text-align: left;
+      vertical-align: middle;
+      border-bottom: 1px solid var(--borde);
+      font-size: 0.9rem;
+    }
+
+    th {
+      background-color: var(--azul-univer);
+      color: white;
+      font-weight: 600;
+    }
+
+    /*ESTADOS (BADGES SIMPLES) */
+    .status-ok {
+      color: #2ecc71;
+      font-weight: 700;
+    }
+
+    .status-pending {
+      color: #f39c12;
+      font-weight: 700;
+    }
+
+    .status-cancelado {
+      color: #e74c3c;
+      font-weight: 700;
+    }
+
+    /*FORMULARIOS */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-group label {
+      font-weight: 600;
+      font-size: 0.85rem;
+      margin-bottom: 5px;
+    }
+
+    .form-group input,
+    .form-group select {
+      padding: 10px;
+      border: 1px solid var(--borde);
+      border-radius: 4px;
+      font-size: 0.95rem;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: var(--azul-acento);
+      box-shadow: 0 0 4px rgba(52, 152, 219, 0.25);
+    }
+
+    .full-width {
+      grid-column: span 2;
+    }
+
+    /*MODAL (DIALOG) */
+    dialog {
+      border: none;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    body:has(dialog[open]) {
+      overflow: hidden;
+    }
+
+    /*FOOTER */
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 0.8rem;
+      color: #95a5a6;
+    }
+
+    @media (max-width: 992px) {
+      .menu-navegacion {
+        display: none;
+      }
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 15px;
+      }
+
+      .navbar-superior {
+        padding: 10px 20px;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .acciones-header {
+        flex-direction: column;
+        align-items: stretch;
+      }
+    }
+    dialog {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    /* Acciones (buscador + botones) */
+    .acciones-header {
+      display: flex;
+      align-items: flex-end;
+      gap: 12px;
+    }
+    /* EDITAR-ELIMINAR */
+    .actions {
+      white-space: nowrap;
+    }
+
+    .icon-btn {
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      font-size: 1.1rem;
+      margin-right: 10px;
+    }
+
+    .icon-btn:hover {
+      transform: scale(1.2);
+    }
+
+    .editar {
+      color: #2564eb;
+    }
+
+    .eliminar {
+      color: #e53935;
+    }
+  </style>
   <body>
-    <div class="dashboard-container">
-      <aside class="sidebar">
-        <div class="logo"><h2>AlquilerExpress</h2></div>
-        <nav>
-          <ul>
-            <li><a href="#">Inicio</a></li>
-            <li><a href="#" class="active">Gestión de Promociones</a></li>
-          </ul>
-        </nav>
-      </aside>
+    <header class="navbar-superior">
+      <div class="navbar-izquierda">
+        <div class="logo-container">
+          <div class="logo-icon"><i class="fas fa-search-location"></i></div>
+          Alquiler Express
+        </div>
+      </div>
 
-      <main class="main-content">
-        <header class="top-bar">
-          <div class="title-section">
-            <h1>Gestión de Promociones</h1>
-            <p>Administra la información de los visitantes</p>
-          </div>
+      <nav>
+        <ul class="menu-navegacion">
+          <li><a href="/">Inicio</a></li>
+          <li><a href="/alquiler/gestionar">Alquileres</a></li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle activo" id="btn-gestionar">
+              Gestionar datos <i class="fas fa-chevron-down"></i>
+            </a>
+            <ul class="dropdown-menu">
+              <li><a href="/turista/gestionar">Turistas</a></li>
+              <li><a href="/usuario/gestionar">Usuarios</a></li>
+              <li><a href="/recurso/gestionar">Recursos</a></li>
+              <li><a href="/pago/gestionar">Pago</a></li>
+              <li><a href="/promocion/gestionar">Promociones</a></li>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
 
-          <div class="toolbar">
-            <button class="btn btn-secondary">Exportar Excel</button>
-            <button class="btn btn-primary">+ Nuevo Promocion</button>
-          </div>
-          <div class="toolbar">
-            <button class="btn btn-secondary">Descargar Reporte</button>
-            <button class="btn btn-success" id="btnNuevoPromocion">
-              + Agregar Nuevo Promocion
+      <div class="navbar-derecha">
+        <i class="far fa-bell"></i>
+        <i class="fas fa-cog"></i>
+        <div class="avatar-usuario">
+          <img src="https://via.placeholder.com/35" alt="User" />
+        </div>
+      </div>
+    </header>
+
+    <script>
+      const btn = document.getElementById("btn-gestionar");
+      const menu = btn.nextElementSibling;
+
+      btn.addEventListener("click", function (e) {
+        e.preventDefault();
+        menu.classList.toggle("activo");
+      });
+
+      document.addEventListener("click", function (e) {
+        if (!btn.contains(e.target) && !menu.contains(e.target)) {
+          menu.classList.remove("activo");
+        }
+      });
+    </script>
+
+    <div style="max-width: 900px; margin: 0 auto">
+      <h1>Gestión de Promociones</h1>
+
+      <div class="card">
+        <!-- HEADER CARD -->
+        <div class="card-header">
+          <h2>Listado de Promociones Registradas</h2>
+
+          <div class="acciones-header">
+            <form class="filter-form">
+              <div class="filter-group">
+                <label for="buscar">Buscar promoción</label>
+                <input
+                  type="text"
+                  id="buscar"
+                  placeholder="Descripción o tipo"
+                />
+              </div>
+              <button type="submit" class="btn btn-guardar">Buscar</button>
+            </form>
+
+            <button class="btn btn-guardar" onclick="miModal.showModal()">
+              Nueva Promoción
             </button>
           </div>
-        </header>
+        </div>
 
-        <section class="filter-section">
-          <form class="filter-form">
-            <div class="filter-group">
-              <label for="dni"> Buscar </label>
-              <input type="text" id="dni" placeholder="Ej: bla bla bla bla" />
+        <!-- TABLA -->
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Descripción</th>
+              <th>Tipo</th>
+              <th>Valor descuento</th>
+              <th>Fecha Inicio</th>
+              <th>Fecha Final</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="promocion : ${promociones}">
+              <td th:text="${promocion.idPromocion}"></td>
+              <td th:text="${promocion.descripcion}"></td>
+              <td th:text="${promocion.tipo}"></td>
+              <td th:text="${promocion.valor_descuento}"></td>
+              <td th:text="${promocion.fechaInicio}"></td>
+              <td th:text="${promocion.fechaFin}"></td>
+              <td class="actions">
+                <button class="icon-btn editar">
+                  <i class="fa-solid fa-pen"></i>
+                </button>
+                <button class="icon-btn eliminar">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- MODAL -->
+      <dialog id="miModal" style="width: 800px">
+        <div class="card-header" style="justify-content: space-between">
+          <h2>Registro de Nueva Promoción</h2>
+          <button class="btn" onclick="miModal.close()">Cerrar</button>
+        </div>
+
+        <form th:action="@{/promocion/guardar}" method="post">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Descripción:</label>
+              <input
+                type="text"
+                name="descripcion"
+                placeholder="Ej. Descuento navideño"
+                required
+              />
             </div>
-            <button type="submit" class="btn-search">Buscar</button>
-          </form>
-        </section>
 
-        <section class="table-section">
-          <div class="table-container">
-            <table>
-              <thead>
-                <tr>
-                  <th>Id</th>
-                  <th>Descripcion</th>
-                  <th>Tipo</th>
-                  <th>Valor_descuento</th>
-                  <th>Fecha Inicio</th>
-                  <th>Fecha Final</th>
-                  <th>Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><strong>P001</strong></td>
-                  <td>blablabla</td>
-                  <td>anuel</td>
-                  <td>3%</td>
-                  <td>15/12/2023</td>
-                  <td><span class="status active">23/12/2024</span></td>
-                  <td class="actions">
-                    <button title="Editar">✏️</button>
-                    <button title="Eliminar" class="delete">🗑️</button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            <div class="form-group">
+              <label>Tipo:</label>
+              <input type="text" name="tipo" placeholder="Ej. anual" required />
+            </div>
+
+            <div class="form-group">
+              <label>Valor de Descuento:</label>
+              <input
+                type="text"
+                name="valor_descuento"
+                placeholder="Ej. 10%"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label>Fecha Inicio:</label>
+              <input type="date" name="fechaInicio" required />
+            </div>
+
+            <div class="form-group">
+              <label>Fecha Final:</label>
+              <input type="date" name="fechaFin" required />
+            </div>
           </div>
 
-          <nav class="pagination">
-            <button disabled>Anterior</button>
-            <span class="page-numbers">Página 1 de 12</span>
-            <button>Siguiente</button>
-          </nav>
-        </section>
-      </main>
+          <div class="btn-container">
+            <button type="reset" class="btn" style="background: #eee">
+              Limpiar
+            </button>
+            <button type="submit" class="btn btn-guardar">
+              Guardar Promoción
+            </button>
+          </div>
+        </form>
+      </dialog>
+
+      <footer>
+        &copy; 2024 - Sistema de Gestión de Promociones | Facultad de Ingeniería
+      </footer>
     </div>
   </body>
 </html>

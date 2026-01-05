@@ -5,6 +5,7 @@
   --blanco: #ffffff;
   --borde: #dcdde1;
   --verde-exito: #27ae60;
+  --rojo: #e74c3c;
 }
 
 body {
@@ -15,12 +16,26 @@ body {
   color: #333;
 }
 
-/* ... (mantener los estilos anteriores de .header-proyecto, .card, h1, h2) ... */
+/* Estilos de Contenedores */
+.card {
+  background: var(--blanco);
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
 
+.header-proyecto {
+  margin-bottom: 30px;
+  border-bottom: 3px solid var(--azul-acento);
+}
+
+/* Formulario y Grid */
 .form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
+  margin-top: 20px;
 }
 
 .form-group {
@@ -34,18 +49,21 @@ body {
 
 label {
   font-weight: bold;
-  margin-bottom: 5px;
+  margin-bottom: 8px;
   font-size: 0.9em;
+  color: var(--azul-univer);
 }
 
-/* Estilos para inputs y selects */
+/* Inputs, Selects y Textarea */
 input,
-select {
-  padding: 10px;
+select,
+.form-input {
+  padding: 12px;
   border: 1px solid var(--borde);
-  border-radius: 4px;
+  border-radius: 6px;
   font-size: 1rem;
   background: white;
+  transition: border-color 0.3s, box-shadow 0.3s;
 }
 
 input:focus,
@@ -55,24 +73,29 @@ select:focus {
   box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
 }
 
-/* Estados */
-.status-ok {
-  color: var(--verde-exito);
-  font-weight: bold;
-  background: #eafaf1;
-  padding: 4px 8px;
-  border-radius: 4px;
+/* Botones */
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: opacity 0.3s;
 }
 
-.status-pending {
-  color: #e67e22;
-  font-weight: bold;
-  background: #fef5e7;
-  padding: 4px 8px;
-  border-radius: 4px;
+.btn-guardar {
+  background-color: var(--verde-exito);
+  color: white;
 }
 
-/* Estilos de Tabla */
+.btn-container {
+  margin-top: 25px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* Tablas y Estados */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -91,13 +114,36 @@ th {
   color: white;
 }
 
-/* Modal mejorado */
+.status-ok {
+  color: var(--verde-exito);
+  background: #eafaf1;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+.status-pending {
+  color: #e67e22;
+  background: #fef5e7;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+/* Modal */
 dialog {
   border: none;
   border-radius: 12px;
-  padding: 30px;
+  padding: 0; /* Ajustado para que el header interno llegue a los bordes */
   width: 700px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+dialog .card-header {
+  padding: 20px 30px;
+  background: #f8f9fa;
+  border-bottom: 1px solid var(--borde);
+}
+
+dialog form {
+  padding: 0 30px 30px 30px;
 }
 
 dialog::backdrop {

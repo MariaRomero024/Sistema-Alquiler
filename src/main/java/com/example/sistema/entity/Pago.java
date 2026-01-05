@@ -16,7 +16,7 @@ public class Pago {
     
     @ManyToOne
     @JoinColumn(name = "idAlquiler")
-    private Alquiler alquiler;
+    private Alquiler idAlquiler;
 
     private Date fecha;
     private Float monto;
@@ -28,8 +28,8 @@ public class Pago {
         return idPago;
     }
 
-    public Alquiler getAlquiler() {
-        return alquiler;
+    public Alquiler getIdAlquiler() {
+        return idAlquiler;
     }
 
     public Date getFecha() {
@@ -52,8 +52,8 @@ public class Pago {
         this.idPago = id;
     }
 
-    public void setAlquiler(Alquiler alquiler) {
-        this.alquiler = alquiler;
+    public void setIdAlquiler(Alquiler idAlquiler) {
+        this.idAlquiler = idAlquiler;
     }
 
     public void setFecha(Date fecha) {

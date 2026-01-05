@@ -1,10 +1,11 @@
 package com.example.sistema.entity;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import java.util.Date;
 
 @Entity
 @Table(name = "Promocion")
@@ -19,8 +20,8 @@ public class Promocion {
     private String descripcion;
     private String tipo;
     private Integer valor_descuento;
-    private Date fechaInicio;
-    private Date fechaFin;
+    private LocalDate fechaInicio;
+    private LocalDate fechaFin;
     // Getters y Setters
 
     public String getIdPromocion() {
@@ -39,11 +40,11 @@ public class Promocion {
         return valor_descuento;
     }
 
-    public Date getFechaInicio() {
+    public LocalDate getFechaInicio() {
         return fechaInicio;
     }
 
-    public Date getFechaFin() {
+    public LocalDate getFechaFin() {
         return fechaFin;
     }
 
@@ -63,11 +64,11 @@ public class Promocion {
         this.valor_descuento = valor_descuento;
     }
 
-    public void setFechaInicio(Date fechaInicio) {
+    public void setFechaInicio(LocalDate fechaInicio) {
         this.fechaInicio = fechaInicio;
     }
 
-    public void setFechaFin(Date fechaFin) {
+    public void setFechaFin(LocalDate fechaFin) {
         this.fechaFin = fechaFin;
     }
 }

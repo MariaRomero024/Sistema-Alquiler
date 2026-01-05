@@ -16,6 +16,7 @@ public class Recurso {
     private String estado;
     private Integer tarifa;
     private String condiciones;
+    public String imagen;
     // Getters y Setters
 
     public String getIdRecurso() {

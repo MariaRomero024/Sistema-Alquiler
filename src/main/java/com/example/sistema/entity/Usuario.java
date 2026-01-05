@@ -14,6 +14,7 @@ public class Usuario {
     private String nombres;
     private String apellidos;
     private Integer telefono;
+    private String contrasenia;
     private String rol;
     // Getters y Setters
 
@@ -28,7 +29,9 @@ public class Usuario {
     public String getApellidos() {
         return apellidos;
     }
-
+    public String getContrasenia() {
+        return contrasenia;
+    }
     public Integer getTelefono() {
         return telefono;
     }
@@ -48,7 +51,9 @@ public class Usuario {
     public void setApellidos(String apellidos) {
         this.apellidos = apellidos;
     }
-
+    public void setContrasenia(String contrasenia) {
+        this.contrasenia = contrasenia;
+    }
     public void setTelefono(Integer telefono) {
         this.telefono = telefono;
     }

@@ -1,92 +1,619 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gestión de Recursos</title>
-    <link rel="stylesheet" href="dashboard.css" />
-    <script
-      src="https://kit.fontawesome.com/your-code.js"
-      crossorigin="anonymous"
-    ></script>
-  </head>
-  <body>
-    <div class="dashboard-container">
-      <aside class="sidebar">
-        <div class="logo"><h2>AlquilerExpress</h2></div>
-        <nav>
-          <ul>
-            <li><a href="#">Inicio</a></li>
-            <li><a href="#" class="active">Gestión de Recursos</a></li>
-          </ul>
-        </nav>
-      </aside>
 
+    <!-- CSS BASE DEL SISTEMA -->
+    <link rel="stylesheet" href="../static/css/dashboard.css" />
+
+    <!-- ICONOS -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+  </head>
+  <style>
+    :root {
+      --azul-univer: #2c3e50;
+      --azul-acento: #3498db;
+      --gris-fondo: #f6f6f8;
+      --blanco: #ffffff;
+      --borde: #dcdde1;
+    }
+
+    /* ================= RESET ================= */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      background-color: var(--gris-fondo);
+      color: #111318;
+      min-height: 100vh;
+    }
+
+    /* ================= NAVBAR ================= */
+    .navbar-superior {
+      background-color: var(--blanco);
+      padding: 10px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #e5e7eb;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .navbar-izquierda {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      font-size: 1.1rem;
+    }
+
+    .logo-icon {
+      background-color: #2b6cee;
+      color: white;
+      width: 35px;
+      height: 35px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .menu-navegacion {
+      display: flex;
+      gap: 25px;
+      list-style: none;
+    }
+
+    .menu-navegacion a {
+      text-decoration: none;
+      color: #616f89;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .menu-navegacion a:hover,
+    .menu-navegacion a.activo {
+      color: #2b6cee;
+    }
+
+    .navbar-derecha {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .avatar-usuario {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      overflow: hidden;
+    }
+
+    /* ================= DROPDOWN ================= */
+    .dropdown {
+      position: relative;
+    }
+
+    .dropdown-menu {
+      position: absolute;
+      top: 35px;
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      list-style: none;
+      padding: 8px 0;
+      min-width: 200px;
+      display: none;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    }
+
+    .dropdown-menu.activo {
+      display: block;
+    }
+
+    .dropdown-menu a {
+      display: block;
+      padding: 10px 15px;
+      text-decoration: none;
+      color: #111318;
+      font-size: 0.9rem;
+    }
+
+    .dropdown-menu a:hover {
+      background-color: #f0f2f4;
+      color: #2b6cee;
+    }
+
+    /* ================= CONTENEDOR ================= */
+    .dashboard-container {
+      max-width: 1350px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    /* ================= TOP BAR ================= */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .title-section h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+
+    /* ================= CARD ================= */
+    .card {
+      background: var(--blanco);
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.08);
+      width: 100%;
+    }
+
+    .section-title {
+      font-size: 1.2rem;
+      padding-left: 10px;
+      border-left: 4px solid var(--azul-acento);
+      margin-bottom: 20px;
+      color: var(--azul-univer);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      gap: 16px;
+    }
+
+    /* ================= FILTRO Y ACCIONES ================= */
+
+    .acciones-header {
+      display: flex;
+      gap: 12px;
+      align-items: flex-end;
+    }
+
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .filter-group label {
+      font-size: 0.8rem;
+      margin-bottom: 4px;
+      color: #555;
+    }
+
+    .filter-group input {
+      height: 42px;
+      padding: 0 12px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    /* ================= BOTONES ================= */
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: background-color 0.3s, transform 0.2s;
+      white-space: nowrap;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-guardar {
+      background-color: var(--azul-acento);
+      color: white;
+    }
+
+    .btn-guardar:hover {
+      background-color: #2b7fc4;
+    }
+
+    td .btn {
+      padding: 6px 12px;
+      font-size: 0.8rem;
+    }
+
+    .btn-container {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 25px;
+    }
+
+    /* ================= TABLA ================= */
+    .table-container {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead th {
+      background-color: var(--azul-univer);
+      color: white;
+      padding: 12px;
+      font-size: 0.9rem;
+    }
+
+    tbody td {
+      padding: 12px;
+      font-size: 0.9rem;
+      border-bottom: 1px solid var(--borde);
+    }
+
+    tbody tr:hover {
+      background-color: #f2f6fa;
+    }
+
+    /* ================= ACCIONES TABLA ================= */
+    .actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .icon-btn {
+      background: transparent;
+      border: none;
+      font-size: 1.1rem;
+      cursor: pointer;
+    }
+
+    .editar {
+      color: #2564eb;
+    }
+
+    .eliminar {
+      color: #e53935;
+    }
+
+    .icon-btn:hover {
+      transform: scale(1.15);
+    }
+
+    /* ================= ESTADOS ================= */
+    .estado-pagado {
+      color: #16a34a;
+      font-weight: 600;
+    }
+
+    /* ================= PAGINACIÓN ================= */
+    .pagination {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+
+    .pagination button {
+      padding: 8px 15px;
+      border: 1px solid var(--borde);
+      background: var(--blanco);
+      border-radius: 4px;
+    }
+
+    /*FORMULARIOS */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-group label {
+      font-weight: 600;
+      font-size: 0.85rem;
+      margin-bottom: 5px;
+    }
+
+    .form-group input,
+    .form-group select {
+      padding: 10px;
+      border: 1px solid var(--borde);
+      border-radius: 4px;
+      font-size: 0.95rem;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: var(--azul-acento);
+      box-shadow: 0 0 4px rgba(52, 152, 219, 0.25);
+    }
+
+    .full-width {
+      grid-column: span 2;
+    }
+
+    /*MODAL (DIALOG) */
+    dialog {
+      border: none;
+      border-radius: 8px;
+      padding: 20px;
+      position: fixed;
+      inset: 0;
+      margin: auto;
+    }
+
+    body:has(dialog[open]) {
+      overflow: hidden;
+    }
+
+    @media (max-width: 992px) {
+      .menu-navegacion {
+        display: none;
+      }
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 15px;
+      }
+
+      .navbar-superior {
+        padding: 10px 20px;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .acciones-header {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+
+    /* ================= FOOTER ================= */
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 0.8em;
+      color: #95a5a6;
+    }
+
+    /* ================= RESPONSIVE ================= */
+    @media (max-width: 900px) {
+      .card-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .acciones-header {
+        flex-wrap: wrap;
+      }
+    }
+    .main-content {
+      width: 100%;
+    }
+
+    .dashboard-container {
+      display: block;
+    }
+  </style>
+  <body>
+    <!-- ================= NAVBAR SUPERIOR ================= -->
+    <header class="navbar-superior">
+      <div class="navbar-izquierda">
+        <div class="logo-container">
+          <div class="logo-icon">
+            <i class="fas fa-search-location"></i>
+          </div>
+          Alquiler Express
+        </div>
+      </div>
+
+      <nav>
+        <ul class="menu-navegacion">
+          <li><a href="/">Inicio</a></li>
+          <li><a href="/alquiler/gestionar">Alquileres</a></li>
+
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" id="btn-gestionar">
+              Gestionar datos <i class="fas fa-chevron-down"></i>
+            </a>
+            <ul class="dropdown-menu">
+              <li><a href="/turista/gestionar">Turistas</a></li>
+              <li><a href="/usuario/gestionar">Usuarios</a></li>
+              <li><a href="/recurso/gestionar" class="activo">Recursos</a></li>
+              <li><a href="/pago/gestionar">Pago</a></li>
+              <li><a href="/promocion/gestionar">Promociones</a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="navbar-derecha">
+        <i class="far fa-bell"></i>
+        <i class="fas fa-cog"></i>
+        <div class="avatar-usuario">
+          <img src="https://via.placeholder.com/35" alt="Usuario" />
+        </div>
+      </div>
+    </header>
+
+    <!-- ================= CONTENIDO ================= -->
+    <div class="dashboard-container">
       <main class="main-content">
-        <header class="top-bar">
+        <!-- ===== TOP BAR ===== -->
+        <div class="top-bar">
           <div class="title-section">
             <h1>Gestión de Recursos</h1>
-            <p>Administra la información de los visitantes</p>
           </div>
+        </div>
 
-          <div class="toolbar">
-            <button class="btn btn-secondary">Exportar Excel</button>
-            <button class="btn btn-primary">+ Nuevo Recurso</button>
-          </div>
-          <div class="toolbar">
-            <button class="btn btn-secondary">Descargar Reporte</button>
-            <button class="btn btn-success" id="btnNuevoRecurso">
-              + Agregar Nuevo Recurso
-            </button>
-          </div>
-        </header>
+        <!-- ===== CARD ===== -->
+        <section class="card">
+          <h2 class="section-title">Listado de Recursos Registrados</h2>
 
-        <section class="filter-section">
-          <form class="filter-form">
-            <div class="filter-group">
-              <label for="dni"> Buscar </label>
-              <input type="text" id="dni" placeholder="Ej: bla bla bla bla" />
+          <!-- HEADER CARD -->
+          <div class="card-header">
+            <div class="acciones-header">
+              <div class="filter-group">
+                <label>Buscar recurso</label>
+                <input type="text" placeholder="Nombre o tipo" />
+              </div>
+
+              <button class="btn btn-secondary">
+                <i class="fas fa-search"></i> Buscar
+              </button>
+
+              <button class="btn btn-guardar" onclick="miModal.showModal()">
+                + Nuevo Recurso
+              </button>
             </div>
-            <button type="submit" class="btn-search">Buscar</button>
-          </form>
-        </section>
-
-        <section class="table-section">
-          <div class="table-container">
-            <table>
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Nombre</th>
-                  <th>Tipo</th>
-                  <th>Estado</th>
-                  <th>Condiciones</th>
-                  <th>Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><strong>R001</strong></td>
-                  <td>pepin</td>
-                  <td>moto</td>
-                  <td>activo</td>
-                  <td>soleado</td>
-                  <td class="actions">
-                    <button title="Editar">✏️</button>
-                    <button title="Eliminar" class="delete">🗑️</button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
           </div>
 
-          <nav class="pagination">
-            <button disabled>Anterior</button>
-            <span class="page-numbers">Página 1 de 12</span>
-            <button>Siguiente</button>
-          </nav>
+          <!-- ===== TABLA ===== -->
+          <section class="table-section">
+            <div class="table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Tipo</th>
+                    <th>Estado</th>
+                    <th>Tarifa</th>
+                    <th>Condiciones</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <tr th:each="recurso : ${recursos}">
+                    <td th:text="${recurso.idRecurso}"></td>
+                    <td th:text="${recurso.nombre}"></td>
+                    <td th:text="${recurso.tipo}"></td>
+                    <td th:text="${recurso.estado}"></td>
+                    <td th:text="${recurso.tarifa}"></td>
+                    <td th:text="${recurso.condiciones}"></td>
+                    <td class="actions">
+                      <button class="icon-btn editar">
+                        <i class="fa-solid fa-pen"></i>
+                      </button>
+                      <button class="icon-btn eliminar">
+                        <i class="fa-solid fa-trash"></i>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- PAGINACIÓN -->
+            <nav class="pagination">
+              <button disabled>Anterior</button>
+              <span class="page-numbers">Página 1 de 12</span>
+              <button>Siguiente</button>
+            </nav>
+          </section>
         </section>
       </main>
     </div>
+
+    <!-- MODAL -->
+    <dialog id="miModal" style="width: 800px">
+      <div class="card-header" style="justify-content: space-between">
+        <h2>Registro de Nuevo Recurso</h2>
+        <button class="btn" onclick="miModal.close()">Cerrar</button>
+      </div>
+
+      <form th:action="@{/recurso/guardar}" method="post">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Nombre:</label>
+            <input
+              type="text"
+              name="nombre"
+              placeholder="Ej. Juan Perez"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label>Tipo:</label>
+            <input type="text" name="tipo" placeholder="Ej. moto" required />
+          </div>
+
+          <div class="form-group">
+            <label>Estado:</label>
+            <input type="text" name="estado" placeholder="ocupado" required />
+          </div>
+
+          <div class="form-group">
+            <label>Tarifa:</label>
+            <input type="number" name="tarifa" required />
+          </div>
+
+          <div class="form-group">
+            <label>Condiciones:</label>
+            <input type="text" name="condiciones" required />
+          </div>
+        </div>
+
+        <div class="btn-container">
+          <button type="reset" class="btn" style="background: #eee">
+            Limpiar
+          </button>
+          <button type="submit" class="btn btn-guardar">
+            Guardar Promoción
+          </button>
+        </div>
+      </form>
+    </dialog>
+
+    <!-- ================= FOOTER ================= -->
+    <footer>&copy; 2024 - Sistema de Registro | Facultad de Ingeniería</footer>
+
+    <!-- ================= SCRIPT DROPDOWN ================= -->
+    <script>
+      const btn = document.getElementById("btn-gestionar");
+      const menu = btn.nextElementSibling;
+
+      btn.addEventListener("click", function (e) {
+        e.preventDefault();
+        menu.classList.toggle("activo");
+      });
+
+      document.addEventListener("click", function (e) {
+        if (!btn.contains(e.target) && !menu.contains(e.target)) {
+          menu.classList.remove("activo");
+        }
+      });
+    </script>
   </body>
 </html>

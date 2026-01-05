@@ -5,7 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import java.util.Date;
+
+import java.time.LocalDateTime;
 
 @Entity
 public class DetalleAlquiler {
@@ -22,8 +23,8 @@ public class DetalleAlquiler {
     @JoinColumn(name = "idRecurso")
     private Recurso recurso;
 
-    private Date fechaInicio;
-    private Date fechaFin;
+    private LocalDateTime fechaInicio;
+    private LocalDateTime fechaFin;
     private String subtotal;
     // Getters y Setters
 
@@ -39,11 +40,11 @@ public class DetalleAlquiler {
         return recurso;
     }
 
-    public java.util.Date getFechaFin() {
+    public LocalDateTime getFechaFin() {
         return fechaFin;
     }
 
-    public Date getFechaInicio() {
+    public LocalDateTime getFechaInicio() {
         return fechaInicio;
     }
 
@@ -63,11 +64,11 @@ public class DetalleAlquiler {
         this.recurso = recurso;
     }
 
-    public void setFechaInicio(Date fechaInicio) {
+    public void setFechaInicio(LocalDateTime fechaInicio) {
         this.fechaInicio = fechaInicio;
     }
 
-    public void setFechaFin(Date fechaFin) {
+    public void setFechaFin(LocalDateTime fechaFin) {
         this.fechaFin = fechaFin;
     }
 

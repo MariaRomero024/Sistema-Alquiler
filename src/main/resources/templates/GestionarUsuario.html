@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gestión de Usuarios</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+    <link
+  href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap"
+  rel="stylesheet"
+/>
+  </head>
+  <style>
+    * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+font-family: "Segoe UI", Tahoma;
+background-color: #f6f6f8;
+color: #111318;
+min-height: 100vh;
+display: flex;
+flex-direction: column;
+}
+
+:root {
+  --azul-acento: #2564eb;
+  --azul-univer: #2c3e50;
+  --blanco: #ffffff;
+  --borde: #e5e7eb;
+}
+
+/* CONTENEDOR PRINCIPAL */
+.dashboard-container {
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.main-content {
+  flex: 1;
+}
+
+/* BARRA SUPERIOR */
+      .navbar-superior {
+        background-color: white;
+        padding: 10px 40px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid #e5e7eb;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+      }
+
+      .navbar-izquierda {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      }
+
+      .logo-container {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 800;
+        font-size: 1.1rem;
+        color: #111318;
+      }
+
+      .logo-icon {
+        background-color: #2b6cee;
+        color: white;
+        width: 35px;
+        height: 35px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* Menú de navegación */
+      .menu-navegacion {
+        display: flex;
+        gap: 25px;
+        list-style: none;
+      }
+
+      .menu-navegacion li a {
+        text-decoration: none;
+        color: #616f89;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: color 0.3s;
+      }
+
+      .menu-navegacion li a.activo,
+      .menu-navegacion li a:hover {
+        color: #2b6cee;
+      }
+
+      .navbar-derecha {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        color: #111318;
+      }
+
+      .avatar-usuario {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        background-color: #ddd;
+        overflow: hidden;
+      }
+      /* Estilo para los enlaces de iconos en la barra derecha */
+      .icon-link {
+        color: #111318;
+        text-decoration: none;
+        font-size: 1.1rem;
+        display: flex;
+        align-items: center;
+        transition: color 0.3s;
+      }
+
+      .icon-link:hover {
+        color: #2b6cee; /* Cambia a azul al pasar el mouse */
+      }
+
+      .navbar-derecha i {
+        cursor: pointer;
+        transition: color 0.3s;
+      }
+
+      .navbar-derecha i:hover {
+        color: #2b6cee;
+      }
+      @media (max-width: 992px) {
+        .grid-stats {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .dashboard-body {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 600px) {
+        .grid-stats {
+          grid-template-columns: 1fr;
+        }
+        .navbar-superior {
+          padding: 10px 20px;
+        }
+      }
+      /* --- DROPDOWN --- */
+      .dropdown {
+        position: relative;
+      }
+
+      .dropdown-toggle {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .dropdown-menu {
+        position: absolute;
+        top: 35px;
+        left: 0;
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        list-style: none;
+        padding: 8px 0;
+        min-width: 200px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        display: none;
+        z-index: 1000;
+      }
+
+      .dropdown-menu li a {
+        display: block;
+        padding: 10px 15px;
+        color: #111318;
+        font-size: 0.9rem;
+        text-decoration: none;
+      }
+
+      .dropdown-menu li a:hover {
+        background-color: #f0f2f4;
+        color: #2b6cee;
+      }
+      .dropdown-menu.activo {
+        display: block;
+      }
+
+/* CARD */
+.card {
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+h3 {
+  font-size: 1.2rem;
+  border-left: 4px solid var(--azul-acento);
+  padding-left: 10px;
+  margin-bottom: 20px;
+  color: var(--azul-univer);
+}
+
+label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  font-size: 0.9em;
+}
+
+input {
+  padding: 10px;
+  border: 1px solid var(--borde);
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--azul-acento);
+  box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+}
+
+.btn-container {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.btn-guardar {
+  background-color: var(--azul-acento);
+  color: white;
+  margin-left:10px;
+}
+
+/* TITULO */
+h2 {
+  color: var(--azul-univer);
+  margin-bottom: 20px;
+  font-size: 30px;
+}
+
+/* ACCIONES BUSCADOR+BOTONES */
+.acciones-header {
+  max-width: 900px;
+  display: flex;
+  align-items: flex-end;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.filter-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.filter-group label {
+  font-size: 0.8rem;
+  margin-bottom: 4px;
+  color: #555;
+}
+
+.filter-group input {
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  height: 42px;
+  padding: 0 12px;
+  font-size: 0.9rem;
+}
+
+/* BOTONES UNIFICADOS */
+.btn {
+  height: 42px;
+  padding: 0 20px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-secondary {
+  background-color: #397dca;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background-color: var(--azul-acento);
+}
+
+/* TABLA */
+.table-section {
+  background: var(--blanco);
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead th {
+  background-color: var(--azul-univer);
+  color: white;
+  padding: 12px;
+  font-size: 0.9rem;
+}
+
+tbody td {
+  padding: 12px;
+  border-bottom: 2px solid var(--borde);
+  font-size: 0.9rem;
+}
+
+table th,
+table td {
+  text-align: left;
+  vertical-align: middle;
+}
+
+
+tbody tr:hover {
+  background-color: #f2f6fa;
+}
+
+/* EDITAR-ELIMINAR */
+.actions {
+  white-space: nowrap;
+}
+
+.icon-btn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 1.1rem;
+  margin-right: 10px;
+}
+
+.icon-btn:hover {
+  transform: scale(1.2);
+}
+
+.editar {
+  color: #2564eb;
+}
+
+.eliminar {
+  color: #e53935;
+}
+
+/* PAGINACION */
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.pagination button {
+  padding: 8px 15px;
+  border: 1px solid var(--borde);
+  background: var(--blanco);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+dialog {
+  margin: auto;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+body:has(dialog[open]) {
+  overflow: hidden;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+footer {
+  text-align: center;
+  margin-top: 40px;
+  font-size: 0.8em;
+  color: #95a5a6;
+}
+</style>
+    <script
+      src="https://kit.fontawesome.com/your-code.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+<header class="navbar-superior">
+  <div class="navbar-izquierda">
+    <div class="logo-container">
+      <div class="logo-icon"><i class="fas fa-search-location"></i></div>
+      Alquiler Express
+    </div>
+  </div>
+
+  <nav>
+    <ul class="menu-navegacion">
+      <li><a href="/">Inicio</a></li>
+      <li>
+        <a href="/alquiler/gestionar">Alquileres</a>
+      </li>
+      <li class="dropdown">
+        <a href="#" class="dropdown-toggle" id="btn-gestionar">
+          Gestionar datos <i class="fas fa-chevron-down"></i>
+        </a>
+        <ul class="dropdown-menu">
+          <li><a href="/turista/gestionar">Turistas</a></li>
+          <li><a href="/usuario/gestionar">Usuarios</a></li>
+          <li><a href="/recurso/gestionar">Recursos</a></li>
+          <li><a href="/pago/gestionar">Pago</a></li>
+          <li><a href="/promocion/gestionar">Promociones</a></li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="navbar-derecha">
+        <i class="far fa-bell" title="Notificaciones"></i>
+        <i class="fas fa-cog" title="Configuración"></i>
+
+        <div class="avatar-usuario">
+          <img src="https://via.placeholder.com/35" alt="User" />
+        </div>
+  </div>
+    <script>
+      const btn = document.getElementById("btn-gestionar");
+      const menu = btn.nextElementSibling;
+
+      btn.addEventListener("click", function (e) {
+        e.preventDefault();
+        menu.classList.toggle("activo");
+      });
+
+      document.addEventListener("click", function (e) {
+        if (!btn.contains(e.target) && !menu.contains(e.target)) {
+          menu.classList.remove("activo");
+        }
+      });
+    </script>
+</header>
+
+    <div class="dashboard-container">
+
+      <main class="main-content">
+        <h2>Gestión de Usuarios</h2>
+
+<div class="card">
+  <div class="acciones-header">
+    <div class="filter-group">
+      <label>Buscar usuario</label>
+      <input type="text" placeholder="ID o Nombre" />
+    </div>
+
+    <div class="toolbar">
+      <button class="btn btn-secondary">Buscar</button>
+    </div>
+
+    <button class="btn btn-guardar" onclick="miModal.showModal()">
+    Nuevo Usuario
+  </button>
+
+  </div>
+        <section class="table-section">
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Nombre</th>
+                  <th>Apellido</th>
+                  <th>Telefono</th>
+                  <th>Rol</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr th:each="usuario : ${usuarios}">
+                  <td th:text="${usuario.idUsuario}"></td>
+                  <td th:text="${usuario.nombres}"></td>
+                  <td th:text="${usuario.apellidos}"></td>
+                  <td th:text="${usuario.telefono}"></td>
+                  <td th:text="${usuario.rol}"></td>
+                  <td class="actions">
+                    <button class="icon-btn editar">
+                      <i class="fa-solid fa-pen"></i>
+                    </button>
+                    <button class="icon-btn eliminar">
+                      <i class="fa-solid fa-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <nav class="pagination">
+            <button disabled>Anterior</button>
+            <span class="page-numbers">Página 1 de 12</span>
+            <button>Siguiente</button>
+          </nav>
+        </section>
+</div>
+<dialog
+  id="miModal"
+  style="border: none; border-radius: 8px; padding: 20px; width: 800px">
+  <div
+  class="card-header"
+  style="justify-content: space-between; display: flex">
+  <h3>Registro de Nuevo Usuario</h3>
+  <button class="btn" onclick="miModal.close()">Cerrar</button>
+  </div>
+  <form th:action="@{/usuario/guardar}" method="post">
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Nombre:</label>
+        <input
+        type="text"
+        name="nombres"
+        placeholder="Ej. Juan"
+        required
+        />
+      </div>
+      <div class="form-group">
+        <label>Apellido:</label>
+        <input
+        type="text"
+        name="apellidos"
+        placeholder="Ej. Pérez"
+        required
+        />
+      </div>
+      <div class="form-group">
+        <label>Teléfono:</label>
+        <input type="tel" name="telefono" placeholder="+54 9 11..." />
+      </div>
+      <div class="form-group">
+        <label>Rol:</label>
+        <input
+        type="text"
+        name="rol"
+        placeholder="Administrador"
+        required
+        />
+      </div>
+      <div class="form-group">
+        <label>Contraseña:</label>
+        <input
+        type="password"
+        name="contrasenia"
+        placeholder="....."
+        required
+        />
+      </div>
+    </div>
+    <div class="btn-container">
+      <button type="reset" class="btn" style="background: #eee">
+        Limpiar
+      </button>
+      <button type="submit" class="btn btn-guardar" style="background:#397dca;">
+        Guardar Registro 
+      </button>
+    </div>
+  </form>
+  </dialog>
+      </main>
+    </div>
+  </body>
+</html>

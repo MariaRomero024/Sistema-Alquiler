@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sistema de Alquileres - Gestión de Recursos</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+
+    <style>
+      /* --- VARIABLES Y RESET --- */
+      :root {
+        --azul-univer: #2c3e50;
+        --azul-acento: #3498db;
+        --azul-nav: #2b6cee;
+        --gris-fondo: #f1f5f9;
+        --blanco: #ffffff;
+        --borde: #e2e8f0;
+        --verde-exito: #10b981;
+        --text-main: #1e293b;
+        --rojo: #e74c3c;
+        --nav-height: 65px; /* Altura aproximada de la nav */
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+        background-color: var(--gris-fondo);
+        color: var(--text-main);
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden; /* Evita scroll doble en el body */
+      }
+
+      /* --- ESTILOS BARRA NAVEGACIÓN (INTEGRADOS) --- */
+      .navbar-superior {
+        background-color: white;
+        padding: 10px 40px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid #e5e7eb;
+        height: var(--nav-height);
+        flex-shrink: 0;
+        z-index: 1000;
+      }
+
+      .navbar-izquierda .logo-container {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 800;
+        font-size: 1.1rem;
+        color: #111318;
+      }
+
+      .logo-icon {
+        background-color: var(--azul-nav);
+        color: white;
+        width: 35px;
+        height: 35px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .menu-navegacion {
+        display: flex;
+        gap: 25px;
+        list-style: none;
+      }
+
+      .menu-navegacion li a {
+        text-decoration: none;
+        color: #616f89;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: color 0.3s;
+      }
+
+      .menu-navegacion li a.activo,
+      .menu-navegacion li a:hover {
+        color: var(--azul-nav);
+      }
+
+      .navbar-derecha {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      }
+
+      .avatar-usuario {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        background-color: #ddd;
+        overflow: hidden;
+      }
+
+      .dropdown {
+        position: relative;
+      }
+      .dropdown-toggle {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        cursor: pointer;
+      }
+      .dropdown-menu {
+        position: absolute;
+        top: 35px;
+        left: 0;
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        list-style: none;
+        padding: 8px 0;
+        min-width: 200px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        display: none;
+        z-index: 1001;
+      }
+      .dropdown-menu li a {
+        display: block;
+        padding: 10px 15px;
+        color: #111318;
+        font-size: 0.9rem;
+        text-decoration: none;
+      }
+      .dropdown-menu li a:hover {
+        background-color: #f0f2f4;
+        color: var(--azul-nav);
+      }
+      .dropdown-menu.activo {
+        display: block;
+      }
+
+      /* --- CONTENEDOR PRINCIPAL ABAJO DE LA NAV --- */
+      .main-container {
+        display: grid;
+        grid-template-columns: 350px 1fr;
+        height: calc(100vh - var(--nav-height));
+        overflow: hidden;
+      }
+
+      /* --- SIDEBAR IZQUIERDO --- */
+      .sidebar-selection {
+        background: var(--blanco);
+        border-right: 1px solid var(--borde);
+        padding: 25px;
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+      }
+
+      .sidebar-selection h2 {
+        font-size: 1.4rem;
+        color: var(--azul-univer);
+        border-bottom: 3px solid var(--azul-acento);
+        padding-bottom: 10px;
+        margin-top: 15px;
+      }
+
+      .selected-list {
+        flex-grow: 1;
+        margin-top: 20px;
+      }
+
+      .selected-item {
+        background: #f8fafc;
+        border: 1px solid var(--borde);
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      /* --- SECCIÓN CATÁLOGO --- */
+      .catalog-section {
+        padding: 30px;
+        overflow-y: auto;
+        background-color: var(--gris-fondo);
+      }
+
+      .header-filters {
+        display: flex;
+        gap: 20px;
+        align-items: flex-end;
+        margin-bottom: 30px;
+        background: var(--blanco);
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      }
+
+      .filter-item {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .filter-item label {
+        font-weight: bold;
+        font-size: 0.8rem;
+        color: var(--azul-univer);
+        text-transform: uppercase;
+      }
+
+      .input-styled {
+        padding: 12px;
+        border: 2px solid var(--borde);
+        border-radius: 8px;
+        font-size: 1rem;
+      }
+
+      .resource-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 25px;
+      }
+
+      .resource-card {
+        background: var(--blanco);
+        border-radius: 15px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        border: 1px solid var(--borde);
+      }
+
+      .resource-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+      }
+
+      .resource-img {
+        width: 100%;
+        height: 160px;
+        object-fit: cover;
+        background: #cbd5e1;
+      }
+      .resource-info {
+        padding: 18px;
+      }
+
+      /* --- MODAL --- */
+      dialog#modalDetalle {
+        width: 800px;
+        max-width: 95vw;
+        border: none;
+        border-radius: 20px;
+        padding: 0;
+      }
+
+      .modal-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 25px;
+        padding: 30px;
+      }
+      .full-width-details {
+        grid-column: span 2;
+        display: flex;
+        gap: 25px;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 25px;
+      }
+      .modal-photo-top {
+        width: 280px;
+        height: 180px;
+        border-radius: 12px;
+        object-fit: cover;
+      }
+
+      .hours-list {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+        max-height: 250px;
+        overflow-y: auto;
+        margin-top: 15px;
+      }
+
+      .hour-chip {
+        padding: 12px;
+        border: 1px solid var(--borde);
+        border-radius: 8px;
+        text-align: center;
+        cursor: pointer;
+      }
+
+      .hour-chip.selected {
+        background: var(--azul-acento);
+        color: white;
+      }
+
+      .btn {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      .btn-guardar {
+        background: var(--verde-exito);
+        color: white;
+      }
+      .btn-cancelar {
+        background: #e2e8f0;
+        color: #475569;
+      }
+
+      dialog::backdrop {
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(3px);
+      }
+    </style>
+  </head>
+  <body>
+    <header class="navbar-superior">
+      <div class="navbar-izquierda">
+        <div class="logo-container">
+          <div class="logo-icon"><i class="fas fa-search-location"></i></div>
+          Alquiler Express
+        </div>
+      </div>
+
+      <nav>
+        <ul class="menu-navegacion">
+          <li><a href="/">Inicio</a></li>
+          <li><a href="/alquiler/gestionar" class="activo">Alquileres</a></li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" id="btn-gestionar">
+              Gestionar datos <i class="fas fa-chevron-down"></i>
+            </a>
+            <ul class="dropdown-menu">
+              <li><a href="/turista/gestionar">Turistas</a></li>
+              <li><a href="/usuario/gestionar">Usuarios</a></li>
+              <li><a href="/recurso/gestionar">Recursos</a></li>
+              <li><a href="/pago/gestionar">Pago</a></li>
+              <li><a href="/promocion/gestionar">Promociones</a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="navbar-derecha">
+        <i class="far fa-bell" title="Notificaciones"></i>
+        <i class="fas fa-cog" title="Configuración"></i>
+        <div class="avatar-usuario">
+          <img src="https://via.placeholder.com/35" alt="User" />
+        </div>
+      </div>
+    </header>
+
+    <div class="main-container">
+      <aside class="sidebar-selection">
+        <div style="margin-bottom: 5px; font-size: 0.85rem; color: #64748b">
+          Vendedor:
+          <strong th:text="${session.usuarioLogueado.nombres}">Usuario</strong>
+        </div>
+
+        <h2>Alquiler Actual</h2>
+        <div id="listaSeleccionados" class="selected-list">
+          <div th:each="item : ${carritoTemporal}" class="selected-item">
+            <div>
+              <strong th:text="${item.recurso.nombre}">Recurso</strong><br />
+              <small th:text="${item.horaInicio + ' - ' + item.horaFin}"
+                >07:00 - 08:00</small
+              >
+            </div>
+            <a
+              th:href="@{/alquiler/quitar-item(index=${itemStat.index})}"
+              style="
+                color: var(--rojo);
+                text-decoration: none;
+                font-weight: bold;
+              "
+              >&times;</a
+            >
+          </div>
+
+          <p
+            th:if="${#lists.isEmpty(carritoTemporal)}"
+            style="
+              color: #64748b;
+              font-style: italic;
+              text-align: center;
+              margin-top: 40px;
+            "
+          >
+            No hay recursos seleccionados.
+          </p>
+        </div>
+
+        <div
+          class="total-section"
+          style="border-top: 2px solid #eee; padding-top: 20px"
+        >
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              font-weight: bold;
+              font-size: 1.1rem;
+              margin-bottom: 20px;
+            "
+          >
+            <span>Total Estimado:</span>
+            <span
+              style="color: var(--verde-exito)"
+              th:text="${'$' + totalCarrito}"
+              >$0.00</span
+            >
+          </div>
+          <form th:action="@{/alquiler/finalizar}" method="post">
+            <button
+              type="submit"
+              class="btn btn-guardar"
+              style="width: 100%; padding: 18px"
+              th:disabled="${#lists.isEmpty(carritoTemporal)}"
+            >
+              Finalizar y Registrar
+            </button>
+          </form>
+        </div>
+      </aside>
+
+      <main class="catalog-section">
+        <header>
+          <h1 style="margin-bottom: 20px">Explorar Recursos</h1>
+          <div class="header-filters">
+            <div class="filter-item" style="flex-grow: 2">
+              <label>¿Qué recurso buscas?</label>
+              <input
+                type="text"
+                class="input-styled"
+                placeholder="🔍 Buscar por nombre o categoría..."
+              />
+            </div>
+            <div class="filter-item" style="flex-grow: 1">
+              <label>Fecha de Alquiler</label>
+              <input
+                type="date"
+                class="input-styled"
+                id="mainDate"
+                th:value="${fechaSeleccionada}"
+              />
+            </div>
+          </div>
+        </header>
+
+        <div class="resource-grid">
+          <div
+            class="resource-card"
+            th:each="recurso : ${recursosDisponibles}"
+            onclick="abrirModal(this)"
+            th:data-id="${recurso.idRecurso}"
+            th:data-nombre="${recurso.nombre}"
+            th:data-tipo="${recurso.tipo}"
+            th:data-estado="${recurso.estado}"
+            th:data-tarifa="${recurso.tarifa}"
+            th:data-condicion="${recurso.condicion}"
+            th:data-img="${recurso.imagen}"
+          >
+            <img th:src="${recurso.imagen}" class="resource-img" />
+
+            <div class="resource-info">
+              <span class="resource-cat" th:text="${recurso.tipo}">
+                Tipo
+              </span>
+
+              <h3 th:text="${recurso.nombre}">Nombre</h3>
+
+              <div class="resource-price">
+                $<span th:text="${recurso.tarifa}">0.00</span> / hora
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <dialog id="modalDetalle">
+      <form
+        th:action="@{/alquiler/agregar-item}"
+        method="post"
+        id="formAgregarItem"
+      >
+        <input type="hidden" name="idRecurso" id="modalIdRecurso" />
+        <input type="hidden" name="fecha" id="modalFecha" />
+        <input type="hidden" name="hora" id="modalHora" />
+
+        <div
+          style="
+            background: var(--azul-univer);
+            color: white;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+          "
+        >
+          <h2 style="margin: 0; font-size: 1.2rem">Detalles del Recurso</h2>
+          <button
+            type="button"
+            onclick="document.getElementById('modalDetalle').close()"
+            style="
+              background: none;
+              border: none;
+              color: white;
+              font-size: 1.8rem;
+              cursor: pointer;
+            "
+          >
+            &times;
+          </button>
+        </div>
+
+        <div class="modal-container">
+          <div class="full-width-details">
+            <img src="" id="modalImg" class="modal-photo-top" />
+            <div class="modal-text">
+              <h3 id="modalNombre" style="margin-top: 0; font-size: 1.6rem">
+                Nombre
+              </h3>
+              <p
+                id="modalDesc"
+                style="color: #64748b; line-height: 1.6; font-size: 0.95rem"
+              >
+                Descripción...
+              </p>
+              <div
+                style="
+                  font-size: 1.3rem;
+                  font-weight: bold;
+                  color: var(--verde-exito);
+                "
+              >
+                $<span id="modalPrecio">0.00</span>
+                <small style="color: #94a3b8">/ hora</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-hours-section">
+            <label style="font-weight: bold; color: var(--azul-univer)"
+              >Seleccione un Horario:</label
+            >
+            <div class="hours-list" id="contenedorHoras">
+              <div class="hour-chip" onclick="seleccionarHora('08:00', this)">
+                08:00 AM
+              </div>
+              <div class="hour-chip" onclick="seleccionarHora('09:00', this)">
+                09:00 AM
+              </div>
+              <div class="hour-chip" onclick="seleccionarHora('10:00', this)">
+                10:00 AM
+              </div>
+              <div class="hour-chip" onclick="seleccionarHora('11:00', this)">
+                11:00 AM
+              </div>
+              <div class="hour-chip" onclick="seleccionarHora('12:00', this)">
+                12:00 PM
+              </div>
+              <div class="hour-chip" onclick="seleccionarHora('13:00', this)">
+                01:00 PM
+              </div>
+              <div class="hour-chip" onclick="seleccionarHora('14:00', this)">
+                02:00 PM
+              </div>
+              <div class="hour-chip" onclick="seleccionarHora('15:00', this)">
+                03:00 PM
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          style="
+            padding: 20px 30px;
+            background: #f8fafc;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+          "
+        >
+          <button
+            type="button"
+            onclick="document.getElementById('modalDetalle').close()"
+            class="btn btn-cancelar"
+          >
+            Volver
+          </button>
+          <button type="submit" class="btn btn-guardar">
+            Agregar al Alquiler
+          </button>
+        </div>
+      </form>
+    </dialog>
+
+    <script th:inline="javascript">
+      // Lógica del Dropdown de la Nav
+      const btnGestionar = document.getElementById("btn-gestionar");
+      const menuGestionar = btnGestionar.nextElementSibling;
+
+      btnGestionar.addEventListener("click", function (e) {
+        e.preventDefault();
+        menuGestionar.classList.toggle("activo");
+      });
+
+      document.addEventListener("click", function (e) {
+        if (
+          !btnGestionar.contains(e.target) &&
+          !menuGestionar.contains(e.target)
+        ) {
+          menuGestionar.classList.remove("activo");
+        }
+      });
+
+      // Lógica del Modal de Recursos
+      function prepararModal(id, nombre, desc, precio, img) {
+        document.getElementById("modalIdRecurso").value = id;
+        document.getElementById("modalNombre").innerText = nombre;
+        document.getElementById("modalDesc").innerText = desc;
+        document.getElementById("modalPrecio").innerText = precio;
+        document.getElementById("modalImg").src = img;
+
+        const fechaGlobal = document.getElementById("mainDate").value;
+        if (!fechaGlobal) {
+          alert("Por favor, selecciona primero una fecha de alquiler.");
+          return;
+        }
+        document.getElementById("modalFecha").value = fechaGlobal;
+        document.getElementById("modalHora").value = "";
+        document
+          .querySelectorAll(".hour-chip")
+          .forEach((c) => c.classList.remove("selected"));
+        document.getElementById("modalDetalle").showModal();
+      }
+
+      function seleccionarHora(valor, elemento) {
+        document.getElementById("modalHora").value = valor;
+        document
+          .querySelectorAll(".hour-chip")
+          .forEach((c) => c.classList.remove("selected"));
+        elemento.classList.add("selected");
+      }
+    </script>
+  </body>
+</html>

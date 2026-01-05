@@ -4,24 +4,425 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sistema de Registro - Turistas</title>
-    <link rel="stylesheet" th:href="@{/css/gestionarTurista.css}" />
+    <link rel="stylesheet" th:href="@{/css/GestionarTurista.css}" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --azul-univer: #2c3e50;
+        --azul-acento: #3498db;
+        --gris-fondo: #f4f7f6;
+        --blanco: #ffffff;
+        --borde: #dcdde1;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+      }
+      body {
+        font-family: "Segoe UI", Tahoma;
+        background-color: var(--gris-fondo);
+        margin: 0;
+        color: #333;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        padding: 0px;
+      }
+
+      .header-proyecto {
+        padding-bottom: 10px;
+      }
+
+      h1 {
+        color: var(--azul-univer);
+        margin-bottom: 5px;
+      }
+
+      .card {
+        background: var(--blanco);
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin-bottom: 30px;
+        max-width: 900px;
+      }
+
+      h2 {
+        font-size: 1.2rem;
+        border-left: 4px solid var(--azul-acento);
+        padding-left: 10px;
+        margin-bottom: 20px;
+        color: var(--azul-univer);
+      }
+
+      .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+      }
+
+      .form-group {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .full-width {
+        grid-column: span 2;
+      }
+
+      label {
+        font-weight: bold;
+        margin-bottom: 5px;
+        font-size: 0.9em;
+      }
+
+      input {
+        padding: 10px;
+        border: 1px solid var(--borde);
+        border-radius: 4px;
+        font-size: 1rem;
+      }
+
+      input:focus {
+        outline: none;
+        border-color: var(--azul-acento);
+        box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+      }
+
+      .btn-container {
+        margin-top: 20px;
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+      }
+
+      .btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: 0.3s;
+      }
+
+      .btn-guardar {
+        background-color: var(--azul-acento);
+        color: white;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background: var(--blanco);
+      }
+
+      th,
+      td {
+        text-align: left;
+        padding: 12px;
+        border-bottom: 1px solid var(--borde);
+      }
+
+      th {
+        background-color: var(--azul-univer);
+        color: white;
+      }
+      dialog {
+        margin: auto;
+        border: none;
+        border-radius: 8px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      }
+
+      body:has(dialog[open]) {
+        overflow: hidden;
+      }
+      footer {
+        text-align: center;
+        margin-top: 40px;
+        font-size: 0.8em;
+        color: #95a5a6;
+      }
+
+      /* BARRA SUPERIOR */
+      .navbar-superior {
+        background-color: white;
+        padding: 10px 40px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid #e5e7eb;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+      }
+
+      .navbar-izquierda {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      }
+
+      .logo-container {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 800;
+        font-size: 1.1rem;
+        color: #111318;
+      }
+
+      .logo-icon {
+        background-color: #2b6cee;
+        color: white;
+        width: 35px;
+        height: 35px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* Menú de navegación */
+      .menu-navegacion {
+        display: flex;
+        gap: 25px;
+        list-style: none;
+      }
+
+      .menu-navegacion li a {
+        text-decoration: none;
+        color: #616f89;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: color 0.3s;
+      }
+
+      .menu-navegacion li a.activo,
+      .menu-navegacion li a:hover {
+        color: #2b6cee;
+      }
+
+      .navbar-derecha {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        color: #111318;
+      }
+
+      .avatar-usuario {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        background-color: #ddd;
+        overflow: hidden;
+      }
+      /* Estilo para los enlaces de iconos en la barra derecha */
+      .icon-link {
+        color: #111318;
+        text-decoration: none;
+        font-size: 1.1rem;
+        display: flex;
+        align-items: center;
+        transition: color 0.3s;
+      }
+
+      .icon-link:hover {
+        color: #2b6cee; /* Cambia a azul al pasar el mouse */
+      }
+
+      .navbar-derecha i {
+        cursor: pointer;
+        transition: color 0.3s;
+      }
+
+      .navbar-derecha i:hover {
+        color: #2b6cee;
+      }
+      @media (max-width: 992px) {
+        .grid-stats {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .dashboard-body {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 600px) {
+        .grid-stats {
+          grid-template-columns: 1fr;
+        }
+        .navbar-superior {
+          padding: 10px 20px;
+        }
+      }
+      /* --- DROPDOWN --- */
+      .dropdown {
+        position: relative;
+      }
+
+      .dropdown-toggle {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .dropdown-menu {
+        position: absolute;
+        top: 35px;
+        left: 0;
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        list-style: none;
+        padding: 8px 0;
+        min-width: 200px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        display: none;
+        z-index: 1000;
+      }
+
+      .dropdown-menu li a {
+        display: block;
+        padding: 10px 15px;
+        color: #111318;
+        font-size: 0.9rem;
+        text-decoration: none;
+      }
+
+      .dropdown-menu li a:hover {
+        background-color: #f0f2f4;
+        color: #2b6cee;
+      }
+      .dropdown-menu.activo {
+        display: block;
+      }
+      .navbar-superior {
+        width: 100%;
+        margin: 0;
+        padding: 10px 40px;
+        box-sizing: border-box;
+      }
+      .contenido-principal {
+        max-width: 900px;
+        margin: 40px auto;
+        padding: 0 20px;
+      }
+      /* Acciones (buscador + botones) */
+      .acciones-header {
+        display: flex;
+        align-items: flex-end;
+        gap: 12px;
+        margin-bottom: 25px;
+      }
+      /* EDITAR-ELIMINAR */
+      .actions {
+        white-space: nowrap;
+      }
+
+      .icon-btn {
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        font-size: 1.1rem;
+        margin-right: 10px;
+      }
+
+      .icon-btn:hover {
+        transform: scale(1.2);
+      }
+
+      .editar {
+        color: #2564eb;
+      }
+
+      .eliminar {
+        color: #e53935;
+      }
+      .filter-group {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .filter-group label {
+        font-size: 0.8rem;
+        margin-bottom: 4px;
+        color: #555;
+      }
+
+      .filter-group input {
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        height: 42px;
+        padding: 0 12px;
+        font-size: 0.9rem;
+      }
+    </style>
   </head>
   <body>
-    <div style="max-width: 900px; margin: 0 auto">
+    <header class="navbar-superior">
+      <div class="navbar-izquierda">
+        <div class="logo-container">
+          <div class="logo-icon"><i class="fas fa-search-location"></i></div>
+          Alquiler Express
+        </div>
+      </div>
+
+      <nav>
+        <ul class="menu-navegacion">
+          <li><a href="/">Inicio</a></li>
+          <li>
+            <a href="/alquiler/gestionar" title="Gestionar alquiler"
+              >Alquileres</a
+            >
+          </li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" id="btn-gestionar"
+              >Gestionar datos <i class="fas fa-chevron-down"></i
+            ></a>
+            <ul class="dropdown-menu">
+              <li><a href="/turista/gestionar">Turistas</a></li>
+              <li><a href="/usuario/gestionar">Usuarios</a></li>
+              <li><a href="/recurso/gestionar">Recursos</a></li>
+              <li><a href="/pago/gestionar">Pago</a></li>
+              <li><a href="/promocion/gestionar">Promociones</a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="navbar-derecha">
+        <i class="far fa-bell" title="Notificaciones"></i>
+        <i class="fas fa-cog" title="Configuración"></i>
+
+        <div class="avatar-usuario">
+          <img src="https://via.placeholder.com/35" alt="User" />
+        </div>
+      </div>
+    </header>
+    <div class="contenido-principal">
       <div class="header-proyecto">
         <h1>Gestión de Turistas</h1>
       </div>
 
       <div class="card">
-        <div
-          class="card-header"
-          style="
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-          "
-        >
-          <h2>Listado de Turistas Registrados</h2>
+        <div class="acciones-header">
+          <div class="filter-group">
+            <label>Buscar usuario</label>
+            <input type="text" placeholder="ID o Nombre" />
+          </div>
+
+          <div class="toolbar">
+            <button class="btn btn-secondary">Buscar</button>
+          </div>
           <button class="btn btn-guardar" onclick="miModal.showModal()">
             Nuevo Turista
           </button>
@@ -35,6 +436,7 @@
               <th>DNI/Pasaporte</th>
               <th>Teléfono</th>
               <th>Email</th>
+              <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
@@ -42,9 +444,17 @@
               <td th:text="${turista.idTurista}"></td>
               <td th:text="${turista.nombre}"></td>
               <td th:text="${turista.apellido}"></td>
-              <td th:text="${turista.dni_pasaporte}"></td>
+              <td th:text="${turista.dniPasaporte}"></td>
               <td th:text="${turista.telefono}"></td>
               <td th:text="${turista.correo}"></td>
+              <td class="actions">
+                <button class="icon-btn editar">
+                  <i class="fa-solid fa-pen"></i>
+                </button>
+                <button class="icon-btn eliminar">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -60,7 +470,7 @@
           <h2>Registro de Nuevo Ingreso</h2>
           <button class="btn" onclick="miModal.close()">Cerrar</button>
         </div>
-        <form th:action="@{/guardar}" method="post">
+        <form th:action="@{/turista/guardar}" method="post">
           <div class="form-grid">
             <div class="form-group">
               <label>Nombre:</label>
@@ -84,7 +494,7 @@
               <label>DNI / Pasaporte:</label>
               <input
                 type="text"
-                name="dni_pasaporte"
+                name="dniPasaporte"
                 placeholder="Número de documento"
                 required
               />
@@ -118,6 +528,21 @@
       <footer>
         &copy; 2024 - Sistema de Registro de Turistas | Facultad de Ingeniería
       </footer>
+      <script>
+        const btn = document.getElementById("btn-gestionar");
+        const menu = btn.nextElementSibling;
+
+        btn.addEventListener("click", function (e) {
+          e.preventDefault();
+          menu.classList.toggle("activo");
+        });
+
+        document.addEventListener("click", function (e) {
+          if (!btn.contains(e.target) && !menu.contains(e.target)) {
+            menu.classList.remove("activo");
+          }
+        });
+      </script>
     </div>
   </body>
 </html>

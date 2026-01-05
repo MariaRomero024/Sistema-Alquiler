@@ -31,4 +31,8 @@ public class UsuarioService {
     public List<Usuario> obtenerTodos() {
         return usuarioRepository.findAll();
     }
+    public Usuario buscarPorId(String id) {
+    return usuarioRepository.findById(id).orElse(null);
+}
+
 }
